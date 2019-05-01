@@ -51,7 +51,7 @@ public class Vista {
 
         jBoxAlbum = new JComboBox();
         jTablaMusica = new JTable();
-        
+       
         jBoxAlbum.addItem("Album 1");
         jBoxAlbum.addItem("Album 2");
         jBoxAlbum.addItem("Todo");
