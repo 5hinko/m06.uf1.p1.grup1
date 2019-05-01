@@ -24,12 +24,12 @@ public class ModelTaula extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        return nombreCampos.size();
+        return registros.size();
     }
 
     @Override
     public int getColumnCount() {
-        return registros.size();
+        return nombreCampos.size();
     }
 
     @Override

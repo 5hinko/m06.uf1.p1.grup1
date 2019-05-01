@@ -29,11 +29,43 @@
         <durada>30</durada>
         <ruta>audios\GetDownOnIt.mp3</ruta>
       </arxiu>
+      <arxiu>
+        <nom>FourOutOfFive</nom>
+        <autor>Arctic Monkeys</autor>
+        <album>Tranquility Base Hotel And Casino</album>
+        <durada>30</durada>
+        <ruta>audios\FourOutOfFive.mp3</ruta>
+      </arxiu>
+      <arxiu>
+        <nom>IfYouWereThereBeware</nom>
+        <autor>Arctic Monkeys</autor>
+        <album>Favourite Worst Nightmare</album>
+        <durada>30</durada>
+        <ruta>audios\IfYouWereThereBeware.mp3</ruta>
+      </arxiu>
+      <arxiu>
+        <nom>SheLooksLikeFun</nom>
+        <autor>Arctic Monkeys</autor>
+        <album>Tranquility Base Hotel And Casino</album>
+        <durada>30</durada>
+        <ruta>audios\SheLooksLikeFun.mp3</ruta>
+      </arxiu>
+      <arxiu>
+        <nom>TheWorldsFirstEverMonsterTruckFrontFlip</nom>
+        <autor>Arctic Monkeys</autor>
+        <album>Tranquility Base Hotel And Casino</album>
+        <durada>30</durada>
+        <ruta>audios\TheWorldsFirstEverMonsterTruckFrontFlip.mp3</ruta>
+      </arxiu>
    </audios>
     <llistes_reproduccio>
       <llista>
         <nom>Llista Groovy</nom>
         <ruta_llista>llistes\llista_groovy.json</ruta_llista>
+      </llista>
+      <llista>
+        <nom>Llista AM</nom>
+        <ruta_llista>llistes\llista_AM.json</ruta_llista>
       </llista>
    </llistes_reproduccio>
 </aplicacio>

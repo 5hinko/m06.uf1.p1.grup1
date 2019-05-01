@@ -7,14 +7,21 @@ import java.awt.event.AdjustmentListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
+import javax.xml.parsers.ParserConfigurationException;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
-import m06.uf1.audioplayer.model.BarraProgreso;
+import m06.uf1.audioplayer.controlador.Listas;
+import org.json.simple.parser.ParseException;
+import org.xml.sax.SAXException;
+import org.w3c.dom.Document;
+import m06.uf1.audioplayer.model.*;
 
 public class Controlador {
 
@@ -27,24 +34,28 @@ public class Controlador {
     private JTable vistaTablaListado;
     private JScrollBar vistaBarraProgreso;
 
-    private static BarraProgreso hiloControladorBarraProgreso ;
-    
+    private static BarraProgreso hiloControladorBarraProgreso;
+
     public Controlador() {
-        vista = new Vista();
-        audio = new Audio("audios/acdc - hells bells.mp3");
+        try {
+            vista = new Vista();
+            audio = new Audio("audios/September.mp3");
 
-        instanciaVariables();
-        afegirDades();
+            instanciaVariables();
 
-        afegirListenerBotons();
-        afegirListeners();
+            //afegirDades();
+            afegirListenerBotons();
+            afegirListeners();
+        } catch (Exception ex) {
+            Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void instanciaVariables() {
         vistaCombBoxAlbum = vista.getjBoxAlbum();
         vistaBarraProgreso = vista.getjBarraProgreso();
         vistaTablaListado = vista.getjTablaMusica();
-        
+
         hiloControladorBarraProgreso = new BarraProgreso(vistaBarraProgreso);
     }
 
@@ -55,57 +66,68 @@ public class Controlador {
         vista.getContinuar().addActionListener(new ControladorBotones());
     }
 
-    private void afegirDades() {
-
+    public void afegirDades() throws ParserConfigurationException, SAXException, IOException, FileNotFoundException, ParseException {
         vistaCombBoxAlbum.removeAllItems();
         //List<String> listaAlbums = new ArrayList<>;
 
+        Listas listas = new Listas();
+        Document doc = listas.parseXML("carrega_dades.xml");
+        listas.getCancionesALL(doc);
+        listas.getListasALL(doc);
+
+        //Temporal - no debraia ser asi
         vistaCombBoxAlbum.addItem(LISTAR_TODAS);
         vistaCombBoxAlbum.setSelectedIndex(0);
+        for (ListaReproduccion lista_repro : listas.listaRepro) {
+            vistaCombBoxAlbum.addItem(lista_repro.getNom());
+        }
+        //CargarCancionesPorLista(lista);
 
         //barra progreso
         vistaBarraProgreso.setValue(0);
 
+        /**
+         * *
+         * No hace falta insertar los datos porque al pasa por El ComboBox al
+         * crear la 1r vez ya lo hace
+         */
         //Intro Tabla y vaciar la lista
         listaCanciones = new ArrayList<>();
 
         insertarDatosTablaMusica(listaCanciones);
 
         vistaTablaListado.changeSelection(0, 0, false, false);
-        
+        if (vistaTablaListado.getRowCount() > 0) {
+        }
+
+        //Hilo itento de hacer la barra de progreso
         hiloControladorBarraProgreso.start();
-        
+
     }
 
     private void afegirListeners() {
-        vistaCombBoxAlbum.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-
-                //Vaciar la lista
-                listaCanciones = new ArrayList<>();
-                if (e.getItem().toString().equals(LISTAR_TODAS)) {
-                    //Todas las listas
-                } else {
-                    //Mirar cual quiere
-                }
-
-                insertarDatosTablaMusica(listaCanciones);
+        vistaCombBoxAlbum.addItemListener((ItemEvent e) -> {
+            //Vaciar la lista
+            listaCanciones = new ArrayList<>();
+            if (e.getItem().toString().equals(LISTAR_TODAS)) {
+                //Todas las listas
+            } else {
+                //Mirar cual quiere
             }
+
+            insertarDatosTablaMusica(listaCanciones);
         });
 
-        vistaTablaListado.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
+        vistaTablaListado.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
+            if (vistaTablaListado.getRowCount() > 0) {
                 vistaTablaListado.getValueAt(vistaTablaListado.getSelectedRow(), 0).toString();
+            } else {
+                //Possiblemente vació
             }
         });
 
-        vista.getjBarraProgreso().addAdjustmentListener(new AdjustmentListener() {
-            @Override
-            public void adjustmentValueChanged(AdjustmentEvent e) {
-                e.getValue();
-            }
+        vista.getjBarraProgreso().addAdjustmentListener((AdjustmentEvent e) -> {
+            e.getValue();
         });
 
     }
@@ -122,6 +144,7 @@ public class Controlador {
     class ControladorBotones implements ActionListener {
 
         //Dotem de funcionalitat als botons
+        @Override
         public void actionPerformed(ActionEvent esdeveniment) {
             //Declarem el gestor d'esdeveniments
             Object gestorEsdeveniments = esdeveniment.getSource();

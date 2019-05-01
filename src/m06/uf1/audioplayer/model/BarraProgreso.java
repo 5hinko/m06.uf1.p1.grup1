@@ -64,6 +64,7 @@ public class BarraProgreso extends Thread {
             //reset
         } while (1 == 1);
 */
+        System.out.println("No Me dejes morir!");
     }
 
     public void saludos() {

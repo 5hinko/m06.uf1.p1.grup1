@@ -14,17 +14,19 @@ import java.util.ArrayList;
 public class ListaReproduccion {
     private String nom;
     private String descripcio;
-    private String ruta_imatge;
-    private ArrayList<AudioMP3> listaAudios;
+    private String rutaImatge;
+    private ArrayList<String> lista_audios ;
+    
+    
 
     public ListaReproduccion() {
+        
     }
-
-    public ListaReproduccion(String nom, String descripcio, String ruta_imatge, ArrayList<AudioMP3> listaAudios) {
+    public ListaReproduccion(String nom, String descripcio, String rutaImatge, ArrayList<String> lista_audios) {
         this.nom = nom;
         this.descripcio = descripcio;
-        this.ruta_imatge = ruta_imatge;
-        this.listaAudios = listaAudios;
+        this.rutaImatge = rutaImatge;
+        this.lista_audios = lista_audios;
     }
 
     public String getNom() {
@@ -35,14 +37,18 @@ public class ListaReproduccion {
         return descripcio;
     }
 
-    public String getRuta_imatge() {
-        return ruta_imatge;
+    public String getRutaImatge() {
+        return rutaImatge;
     }
 
-    public ArrayList<AudioMP3> getListaAudios() {
-        return listaAudios;
+    public ArrayList<String> getLista_audios() {
+        return lista_audios;
     }
 
+    
+    
+
+   
     
  
 }
