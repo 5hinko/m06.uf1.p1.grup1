@@ -10,9 +10,15 @@ package m06.uf1.audioplayer;
  * @author Juan
  */
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import javax.xml.parsers.ParserConfigurationException;
+import org.json.simple.parser.ParseException;
+import org.xml.sax.SAXException;
 
 public class ReproductorAudio {
-    public static void main(String[] args) throws FileNotFoundException {
-        Controlador controlador = new Controlador();     
+    public static void main(String[] args) throws FileNotFoundException, ParseException, ParserConfigurationException, SAXException, IOException {
+        Controlador controlador = new Controlador();    
+        controlador.afegirDades();
+        
     }
 }

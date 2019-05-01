@@ -34,10 +34,8 @@ import org.xml.sax.SAXException;
  */
 public class Listas {
 
-    
-     public ArrayList<AudioMP3> listaAudios = new ArrayList<>();
-     public ArrayList<ListaReproduccion> listaRepro = new ArrayList<>();
-
+    public ArrayList<AudioMP3> listaAudios = new ArrayList<>();
+    public ArrayList<ListaReproduccion> listaRepro = new ArrayList<>();
 
     //Añade todas als canciones a un Arraylist - para no tener que estar leyendo el fichero todo el rato
     public void getCancionesALL(Document doc) {
@@ -58,7 +56,7 @@ public class Listas {
         }
     }
 
-    public  AudioMP3 getCancion(String nombre) {
+    public AudioMP3 getCancion(String nombre) {
         AudioMP3 audioA = new AudioMP3();
         for (AudioMP3 audio : listaAudios) {
             if (audio.getNom().equals(nombre)) {
@@ -77,32 +75,29 @@ public class Listas {
             Element eRuta = (Element) eLlista.getElementsByTagName("ruta_llista").item(0);
 
             JSONParser parser = new JSONParser();
-
-            //Habria que darle el fichero en concreto
             JSONObject lista = (JSONObject) parser
                     .parse(new FileReader(eRuta.getTextContent()));
 
-            JSONArray cancioneslista = (JSONArray) lista.get("archius_audi");
-            System.out.println("Lista de canciones");
-            for (Object object : cancioneslista) {
-                System.out.println("Nombre: " + object);
-                //super marronero
-                /*for (AudioMP3 audio : listaAudios) {
-                    if (audio.getNom().equals(object)) {
-                        System.out.println("Ruta: " + audio.getRuta());
-                    }
-                }
-                 */
-            }
-            String nom = (String)lista.get("nom");
-            
-            System.out.println("Nombre con el JSON " + nom);
-            
-            
-            //ListaReproduccion listarepro = new ListaReproduccion(nom, ruta_lista);
+            //Pilla el nombre
+            String nom = (String) lista.get("nom");
+            String descripcio = (String) lista.get("descripcio");
+            String ruta_imatge = (String) lista.get("ruta_imatge");
+            ArrayList<String> lista_canciones = new ArrayList<>();
 
+            JSONArray lista_archivos_audio = (JSONArray) lista.get("archius_audi");
+        
+            //lista de canciones
+            for (Object object : lista_archivos_audio) {
+                lista_canciones.add(object.toString());
+
+            }
+            ListaReproduccion listarepro = new ListaReproduccion(nom, descripcio, ruta_imatge, lista_canciones);
+            listaRepro.add(listarepro);
+
+            //ListaReproduccion listarepro = new ListaReproduccion(nom, ruta_lista);
         }
     }
+
     public Document parseXML(String rutaFichero) throws ParserConfigurationException, SAXException, IOException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();

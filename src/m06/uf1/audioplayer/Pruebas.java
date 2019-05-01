@@ -116,9 +116,10 @@ public class Pruebas {
                 }
 
             }
-                            System.out.println("/////////\n\n");
+            System.out.println("/////////\n\n");
 
-            //ListaReproduccion listarepro = new ListaReproduccion(nom, ruta_lista);
+            //Temporal = mal
+            //ListaReproduccion listarepro = new ListaReproduccion(nom, "aaa");
         }
     }
 

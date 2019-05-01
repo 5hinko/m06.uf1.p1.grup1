@@ -21,7 +21,7 @@ public class Vista {
 
     private JComboBox jBoxAlbum;
     private JScrollPane jScroll;
-    private JTable jTablaMusica;
+    public static JTable jTablaMusica;
 
     private JLabel imagenLabel;
     private JLabel textoLlista;
