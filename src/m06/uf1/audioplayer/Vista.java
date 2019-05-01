@@ -36,13 +36,9 @@ public class Vista {
     public Vista() {
 
         finestra = new JFrame("Reproductor Àudio");
-        //finestra.setSize(400, 50);
-        //finestra.setResizable(false);
-        finestra.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        finestra.setLocationRelativeTo(null);
 
-        jPrincipal = new JPanel(new FlowLayout());
-        jPrincipal.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+        jPrincipal = new JPanel(new GridLayout(0,3));
+        jPrincipal.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
         columnaLista = new JPanel();
         columnaLista.setLayout(new BoxLayout(columnaLista, BoxLayout.PAGE_AXIS));
@@ -55,9 +51,9 @@ public class Vista {
         jBoxAlbum.addItem("Todo");
         jTablaMusica.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][]{
-                    {null, null},
-                    {null, null},
-                    {null, null}
+                    {"Musica 1", null},
+                    {"Musica 2", null},
+                    {"Musica 3", null}
                 },
                 new String[]{
                     "Nombre Musica", "Por Ahora nada"
@@ -75,19 +71,18 @@ public class Vista {
         columnaMusica = new JPanel();
         columnaMusica.setLayout(new BorderLayout());
 
-        textoLlista = new JLabel("Nombre Llista");
-        textoTitulo = new JLabel("Titulo Cación");
+        textoLlista = new JLabel("Nombre Llista - ");
+        textoTitulo = new JLabel("Titulo Canción");
         imagenLabel = new JLabel("imagen");
         imagenLabel.setSize(300, 300);
-        textoAutor = new JLabel("Autor");
-        textoDescr = new JLabel("Descr");
+        textoAutor = new JLabel("Autor :");
+        textoDescr = new JLabel("Descr :");
         
         jBarraProgreso = new JScrollBar();
         jBarraProgreso.setOrientation(JScrollBar.HORIZONTAL);
         jBarraProgreso.setMaximum(0);
         jBarraProgreso.setMaximum(100);
-        jBarraProgreso.setBounds(0, 0, 200, 10);
-        jBarraProgreso.setPreferredSize(new Dimension(250,10));
+        jBarraProgreso.setPreferredSize(new Dimension(250,15));
         textoDuracion = new JLabel("0:00/3:00");
 
         //Titulo 
@@ -140,7 +135,12 @@ public class Vista {
         jPrincipal.add(columnaLista);
         jPrincipal.add(columnaMusica);
         finestra.add(jPrincipal);
-
+        
+        //finestra.setSize(400, 300);
+        //finestra.setResizable(false);
+        finestra.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        finestra.setLocationRelativeTo(null);
+        
         finestra.pack();
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         finestra.setLocation(dim.width / 2 - finestra.getSize().width / 2, dim.height / 2 - finestra.getSize().height / 2);
