@@ -18,6 +18,10 @@ public class Audio {
         }
     }
 
+    Audio(String textContent, String textContent0, int parseInt, String textContent1, String textContent2) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     public BasicPlayer getPlayer() {
         return player;
     }
