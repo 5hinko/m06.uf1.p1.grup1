@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<aplicacio>
+    <audios>
+      <arxiu>
+        <nom>September</nom>
+        <autor>Earth, Wind and Fire</autor>
+        <album>September</album>
+        <durada>30</durada>
+        <ruta>audios\September.mp3</ruta>
+      </arxiu>
+      <arxiu>
+        <nom>Celebration</nom>
+        <autor>Kool and the Gang</autor>
+        <album>Celebrate!r</album>
+        <durada>30</durada>
+        <ruta>audios\Celebrate.mp3</ruta>
+      </arxiu>
+      <arxiu>
+        <nom>Rasputin</nom>
+        <autor>Boney M</autor>
+        <album>Nightflight to Venus</album>
+        <durada>30</durada>
+        <ruta>audios\Rasputin.mp3</ruta>
+      </arxiu>
+      <arxiu>
+        <nom>GetDownOnIt</nom>
+        <autor>Kool and the Gang</autor>
+        <album>Something Special</album>
+        <durada>30</durada>
+        <ruta>audios\GetDownOnIt.mp3</ruta>
+      </arxiu>
+   </audios>
+    <llistes_reproduccio>
+      <llista>
+        <nom>Llista Groovy</nom>
+        <ruta_llista>llistes\llista_groovy.json</ruta_llista>
+      </llista>
+   </llistes_reproduccio>
+</aplicacio>
