@@ -78,16 +78,16 @@ public class Vista {
         columnaMusica.setLayout(new BorderLayout());
         columnaMusica.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
-        textoLlista = new JLabel("Nombre Llista - ");
+        textoLlista = new JLabel("Nombre Llista");
         textoTitulo = new JLabel("Titulo Canción");
-        imagenLabel = new JLabel("imagen");
+        imagenLabel = new JLabel("Imagen 300X200?");
         int width= 300, height = 200;
         imagenLabel.setMinimumSize(new Dimension(width, height));
         imagenLabel.setMaximumSize(new Dimension(width, height));
         imagenLabel.setPreferredSize(new Dimension(width, height));
         imagenLabel.setBackground(Color.red);
-        textoAutor = new JLabel("Autor :");
-        textoDescr = new JLabel("Descr :");
+        textoAutor = new JLabel("Yo mismo");
+        textoDescr = new JLabel("Pues es muy bonito");
         
         jBarraProgreso = new JScrollBar();
         jBarraProgreso.setOrientation(JScrollBar.HORIZONTAL);
@@ -99,6 +99,7 @@ public class Vista {
         //Titulo 
         menuControl = new JPanel( new FlowLayout());
         menuControl.add(textoLlista);
+        menuControl.add(new JLabel(" - "));
         menuControl.add(textoTitulo);
         
         columnaMusica.add(menuControl,BorderLayout.NORTH);
@@ -111,8 +112,14 @@ public class Vista {
         
         menuControl2 = new JPanel();
         menuControl2.setLayout( new BoxLayout(menuControl2, BoxLayout.PAGE_AXIS));
-        menuControl2.add(textoAutor);
-        menuControl2.add(textoDescr);
+        JPanel menuControlExtension = new JPanel(new FlowLayout());
+        menuControlExtension.add(new JLabel("Autor: "));
+        menuControlExtension.add(textoAutor);
+        menuControl2.add(menuControlExtension);
+        menuControlExtension = new JPanel(new FlowLayout());
+        menuControlExtension.add(new JLabel("Descripción: "));
+        menuControlExtension.add(textoDescr);
+        menuControl2.add(menuControlExtension);
         menuControl.add(menuControl2, BorderLayout.CENTER);
         
         menuControl2 = new JPanel( new BorderLayout());
@@ -163,7 +170,7 @@ public class Vista {
         finestra.add(jPrincipal);
         
         //finestra.setSize(400, 300);
-        //finestra.setResizable(false);
+        finestra.setResizable(false);
         finestra.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         finestra.setLocationRelativeTo(null);
         
@@ -220,5 +227,41 @@ public class Vista {
 
     public void setContinuar(JButton continuar) {
         this.continuar = continuar;
+    }
+
+    public JComboBox getjBoxAlbum() {
+        return jBoxAlbum;
+    }
+
+    public JTable getjTablaMusica() {
+        return jTablaMusica;
+    }
+
+    public JLabel getImagenLabel() {
+        return imagenLabel;
+    }
+
+    public JLabel getTextoLlista() {
+        return textoLlista;
+    }
+
+    public JLabel getTextoDescr() {
+        return textoDescr;
+    }
+
+    public JLabel getTextoTitulo() {
+        return textoTitulo;
+    }
+
+    public JLabel getTextoAutor() {
+        return textoAutor;
+    }
+
+    public JScrollBar getjBarraProgreso() {
+        return jBarraProgreso;
+    }
+
+    public JLabel getTextoDuracion() {
+        return textoDuracion;
     }
 }
