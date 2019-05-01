@@ -13,36 +13,26 @@ import java.util.ArrayList;
  */
 public class ListaReproduccion {
     private String nom;
-    private String descripcio;
-    private String ruta_imatge;
-    private ArrayList<AudioMP3> listaAudios;
+    private String ruta_lista;
+    
 
     public ListaReproduccion() {
     }
 
-    public ListaReproduccion(String nom, String descripcio, String ruta_imatge, ArrayList<AudioMP3> listaAudios) {
+    public ListaReproduccion(String nom, String ruta_lista) {
         this.nom = nom;
-        this.descripcio = descripcio;
-        this.ruta_imatge = ruta_imatge;
-        this.listaAudios = listaAudios;
+        this.ruta_lista = ruta_lista;
     }
 
     public String getNom() {
         return nom;
     }
 
-    public String getDescripcio() {
-        return descripcio;
+    public String getRuta_lista() {
+        return ruta_lista;
     }
 
-    public String getRuta_imatge() {
-        return ruta_imatge;
-    }
-
-    public ArrayList<AudioMP3> getListaAudios() {
-        return listaAudios;
-    }
-
+   
     
  
 }

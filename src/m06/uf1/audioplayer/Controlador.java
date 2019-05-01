@@ -13,7 +13,7 @@ public class Controlador {
 
     public Controlador() {
         vista = new Vista();
-        audio = new Audio("audios/acdc - hells bells.mp3");
+        audio = new Audio("audios/September.mp3");
         
         //afegirDades();
         afegirListenerBotons();
@@ -33,6 +33,7 @@ public class Controlador {
        //List<String> listaAlbums = new ArrayList<>;
        
        boxAlbum.addItem("Todo");
+       boxAlbum.addItem("asddas");
         
     }
 
