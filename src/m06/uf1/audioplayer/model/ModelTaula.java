@@ -1,4 +1,4 @@
-package m06.uf1.audioplayer;
+package m06.uf1.audioplayer.model;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;

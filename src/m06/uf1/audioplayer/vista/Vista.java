@@ -1,4 +1,4 @@
-package m06.uf1.audioplayer;
+package m06.uf1.audioplayer.vista;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -10,6 +10,8 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 import javax.swing.*;
+import m06.uf1.audioplayer.model.ModelTaula;
+import m06.uf1.audioplayer.controlador.RenderizadorCeldas;
 
 public class Vista {
 
@@ -53,9 +55,9 @@ public class Vista {
         jBoxAlbum = new JComboBox();
         jTablaMusica = new JTable();
        
+        jBoxAlbum.addItem("Todo");
         jBoxAlbum.addItem("Album 1");
-        jBoxAlbum.addItem("Album 2");
-        jBoxAlbum.addItem("Todo");/*
+        jBoxAlbum.addItem("Album 2");/*
         jTablaMusica.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][]{
                     {"Musica 1", null},
@@ -69,18 +71,19 @@ public class Vista {
         ArrayList<ArrayList> listaCanciones = new ArrayList<>();
         ArrayList<String> firstString = new ArrayList<>();
         firstString.add("Musica 1");
-        firstString.add(null);
+        firstString.add("03:30");
         listaCanciones.add(firstString);
         firstString = new ArrayList<>();
-        firstString.add("Musica 2");
+        firstString.add("Musica 2        ");
         firstString.add(null);
         listaCanciones.add(firstString);
         firstString = new ArrayList<>();
         firstString.add("Musica 3");
-        firstString.add(null);
+        firstString.add("03:30");
         listaCanciones.add(firstString);
         
         jTablaMusica.setModel(new ModelTaula(listaCanciones));
+        
         RenderizadorCeldas renderizador = new RenderizadorCeldas();
         for (int i = 0; i < jTablaMusica.getColumnCount(); i++) {
             jTablaMusica.getColumnModel().getColumn(i).setCellRenderer(renderizador);
