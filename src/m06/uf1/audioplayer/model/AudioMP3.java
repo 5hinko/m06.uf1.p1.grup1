@@ -28,45 +28,23 @@ public class AudioMP3 {
         this.ruta = ruta;
     }
     
-
     public String getNom() {
         return nom;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
     }
 
     public String getAutor() {
         return autor;
     }
-
-    public void setAutor(String autor) {
-        this.autor = autor;
-    }
-
+    
     public String getAlbum() {
         return album;
-    }
-
-    public void setAlbum(String album) {
-        this.album = album;
     }
 
     public int getDurada() {
         return durada;
     }
 
-    public void setDurada(int durada) {
-        this.durada = durada;
-    }
-
     public String getRuta() {
         return ruta;
-    }
-
-    public void setRuta(String ruta) {
-        this.ruta = ruta;
-    }
-    
+    } 
 }

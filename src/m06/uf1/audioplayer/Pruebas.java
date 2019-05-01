@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import static java.util.Collections.list;
 
 import m06.uf1.audioplayer.model.*;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 
 /**
@@ -35,19 +37,18 @@ public class Pruebas {
     static ArrayList<AudioMP3> listaAudios = new ArrayList<>();
     static ArrayList<ListaReproduccion> listaRepro = new ArrayList<>();
 
-    public static void main(String[] args) throws IOException, ParserConfigurationException {
+    public static void main(String[] args) throws IOException, ParserConfigurationException, FileNotFoundException, ParseException {
 
         try {
             Document doc = parseXML("carrega_dades.xml");
-            getCancionesALL(doc);
-            AudioMP3 audioEncontrado = devolverAduio("September");
-            String ruta = audioEncontrado.getRuta();
-            System.out.println("Ruta " + ruta);
+           getCancionesALL(doc);
+           // AudioMP3 audioEncontrado = getCancion("September");
+           // String ruta = audioEncontrado.getRuta();
+           // System.out.println("Ruta " + ruta);
 
-            File archivoAudio = new File(ruta);
-            if (archivoAudio.exists() && archivoAudio.isFile()) {
-                System.out.println("Encontrado");
-            }
+            getListasALL(doc);
+
+           
 
         } catch (SAXException ex) {
             Logger.getLogger(Pruebas.class.getName()).log(Level.SEVERE, null, ex);
@@ -74,7 +75,7 @@ public class Pruebas {
         }
     }
 
-    public static AudioMP3 devolverAduio(String nombre) {
+    public static AudioMP3 getCancion(String nombre) {
         AudioMP3 audioA = new AudioMP3();
         for (AudioMP3 audio : listaAudios) {
             if (audio.getNom().equals(nombre)) {
@@ -84,6 +85,36 @@ public class Pruebas {
         return audioA;
     }
 
+    public static void getListasALL(Document doc) throws FileNotFoundException, IOException, ParseException{
+       NodeList nombresListas = doc.getElementsByTagName("llista");
+        for (int i = 0; i < nombresListas.getLength(); i++) {
+            Node nNode = nombresListas.item(i);
+            Element eLlista = (Element) nNode;
+            Element eNom = (Element) eLlista.getElementsByTagName("nom").item(0);
+            Element eRuta = (Element) eLlista.getElementsByTagName("ruta_llista").item(0);
+            
+            JSONParser parser = new JSONParser();
+            
+            //Habria que darle el fichero en concreto
+            JSONObject lista = (JSONObject)parser
+                    .parse(new FileReader("llistes\\llista_groovy.json"));
+            JSONArray cancioneslista = (JSONArray)lista.get("archius_audi");
+            System.out.println("Lista de canciones");
+            for (Object object : cancioneslista) {
+                System.out.println("Nombre: " + object);
+                //super marronero
+                for (AudioMP3 audio : listaAudios) {
+                    if (audio.getNom().equals(object)) {
+                        System.out.println("Ruta: " + audio.getRuta());
+                    }
+                }
+            }
+            
+            
+            
+        } 
+    }
+    
     public static Document parseXML(String rutaFichero) throws ParserConfigurationException, SAXException, IOException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();

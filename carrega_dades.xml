@@ -31,7 +31,9 @@
       </arxiu>
    </audios>
     <llistes_reproduccio>
-      <nom>Llista Groovy</nom>
-      <ruta_llista>llistes\llista_groovy.json</ruta_llista>
+      <llista>
+        <nom>Llista Groovy</nom>
+        <ruta_llista>llistes\llista_groovy.json</ruta_llista>
+      </llista>
    </llistes_reproduccio>
 </aplicacio>
