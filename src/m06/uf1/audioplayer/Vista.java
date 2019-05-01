@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import javax.swing.*;
@@ -15,6 +17,7 @@ public class Vista {
     private JPanel columnaLista;
     private JPanel columnaMusica;
     private JPanel menuControl;
+    private JPanel menuControl2;
 
     private JComboBox jBoxAlbum;
     private JScrollPane jScroll;
@@ -37,11 +40,14 @@ public class Vista {
 
         finestra = new JFrame("Reproductor Àudio");
 
-        jPrincipal = new JPanel(new GridLayout(0,3));
+        jPrincipal = new JPanel(new GridBagLayout());
+        GridBagConstraints constraint = new GridBagConstraints();
+        
         jPrincipal.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
         columnaLista = new JPanel();
         columnaLista.setLayout(new BoxLayout(columnaLista, BoxLayout.PAGE_AXIS));
+        columnaLista.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
         jBoxAlbum = new JComboBox();
         jTablaMusica = new JTable();
@@ -70,11 +76,16 @@ public class Vista {
         //Columna Musica
         columnaMusica = new JPanel();
         columnaMusica.setLayout(new BorderLayout());
+        columnaMusica.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
         textoLlista = new JLabel("Nombre Llista - ");
         textoTitulo = new JLabel("Titulo Canción");
         imagenLabel = new JLabel("imagen");
-        imagenLabel.setSize(300, 300);
+        int width= 300, height = 200;
+        imagenLabel.setMinimumSize(new Dimension(width, height));
+        imagenLabel.setMaximumSize(new Dimension(width, height));
+        imagenLabel.setPreferredSize(new Dimension(width, height));
+        imagenLabel.setBackground(Color.red);
         textoAutor = new JLabel("Autor :");
         textoDescr = new JLabel("Descr :");
         
@@ -93,19 +104,24 @@ public class Vista {
         columnaMusica.add(menuControl,BorderLayout.NORTH);
 
         //Centro
-        /*menuControl = new JPanel();
+        menuControl = new JPanel();
         menuControl.setLayout(new BorderLayout());
+        imagenLabel.setHorizontalAlignment(SwingConstants.CENTER);
         menuControl.add(imagenLabel, BorderLayout.NORTH);
         
-        menuControl.add(textoAutor, BorderLayout.CENTER);
-        menuControl.add(textoDescr, BorderLayout.CENTER);
+        menuControl2 = new JPanel();
+        menuControl2.setLayout( new BoxLayout(menuControl2, BoxLayout.PAGE_AXIS));
+        menuControl2.add(textoAutor);
+        menuControl2.add(textoDescr);
+        menuControl.add(menuControl2, BorderLayout.CENTER);
         
-        menuControl.add(jBarraProgreso, BorderLayout.SOUTH);
-        menuControl.add(textoDuracion, BorderLayout.SOUTH);
+        menuControl2 = new JPanel( new BorderLayout());
+        menuControl2.setBorder(BorderFactory.createEmptyBorder(10,5,0,5));
+        menuControl2.add(jBarraProgreso,BorderLayout.CENTER);
+        menuControl2.add(textoDuracion,BorderLayout.EAST);
+        menuControl.add(menuControl2, BorderLayout.SOUTH);
+        /*
         
-        columnaMusica.add(menuControl,BorderLayout.CENTER);*/
-        
-        menuControl = new JPanel();
         menuControl.setLayout(new BoxLayout(menuControl, BoxLayout.PAGE_AXIS));
         menuControl.add(imagenLabel);
         
@@ -113,7 +129,7 @@ public class Vista {
         menuControl.add(textoDescr);
         
         menuControl.add(jBarraProgreso);
-        menuControl.add(textoDuracion);
+        menuControl.add(textoDuracion);*/
         
         columnaMusica.add(menuControl,BorderLayout.CENTER);
 
@@ -121,6 +137,7 @@ public class Vista {
 
         menuControl = new JPanel();
         menuControl.setLayout(new GridLayout(0,4));
+        menuControl.setBorder(BorderFactory.createEmptyBorder(20,5,0,5));
         play = new JButton("Play");
         stop = new JButton("Stop");
         pausa = new JButton("Pause");
@@ -132,8 +149,17 @@ public class Vista {
 
         columnaMusica.add(menuControl, BorderLayout.SOUTH);
 
-        jPrincipal.add(columnaLista);
-        jPrincipal.add(columnaMusica);
+        constraint.fill = GridBagConstraints.HORIZONTAL;
+        //constraint.ipady = 40;
+        constraint.gridx = 0;
+        constraint.gridy = 0;
+        jPrincipal.add(columnaLista, constraint);
+        constraint.fill = GridBagConstraints.HORIZONTAL;
+        constraint.gridwidth = 3;
+        constraint.gridx = 1;
+        constraint.gridy = 0;
+        jPrincipal.add(columnaMusica, constraint);
+        
         finestra.add(jPrincipal);
         
         //finestra.setSize(400, 300);
