@@ -32,7 +32,8 @@ public class Vista {
     private JLabel textoTitulo;
     private JLabel textoAutor;
     private JScrollBar jBarraProgreso;
-    private JLabel textoDuracion;
+    private JLabel textoTiempo;
+    private JLabel textoMaxDuracion;
 
     private JButton play;
     private JButton stop;
@@ -90,7 +91,7 @@ public class Vista {
         }
         
         jTablaMusica.setPreferredScrollableViewportSize(new Dimension(
-                jTablaMusica.getPreferredSize().width,
+                (jTablaMusica.getPreferredSize().width *3)/2,
                 jTablaMusica.getRowHeight() * 20));
         jScroll = new JScrollPane(jTablaMusica);
         
@@ -109,7 +110,7 @@ public class Vista {
         imagenLabel.setMinimumSize(new Dimension(width, height));
         imagenLabel.setMaximumSize(new Dimension(width, height));
         imagenLabel.setPreferredSize(new Dimension(width, height));
-        imagenLabel.setBackground(Color.red);
+        imagenLabel.setBorder(BorderFactory.createTitledBorder(""));
         textoAutor = new JLabel("Yo mismo");
         textoDescr = new JLabel("Pues es muy bonito");
         
@@ -118,7 +119,8 @@ public class Vista {
         jBarraProgreso.setMaximum(0);
         jBarraProgreso.setMaximum(100);
         jBarraProgreso.setPreferredSize(new Dimension(250,15));
-        textoDuracion = new JLabel("0:00/3:00");
+        textoTiempo = new JLabel("0:00");
+        textoMaxDuracion = new JLabel("03:00");
 
         //Titulo 
         menuControl = new JPanel( new FlowLayout());
@@ -149,7 +151,11 @@ public class Vista {
         menuControl2 = new JPanel( new BorderLayout());
         menuControl2.setBorder(BorderFactory.createEmptyBorder(10,5,0,5));
         menuControl2.add(jBarraProgreso,BorderLayout.CENTER);
-        menuControl2.add(textoDuracion,BorderLayout.EAST);
+        JPanel panelExpress = new JPanel(new FlowLayout());
+        panelExpress.add(textoTiempo);
+        panelExpress.add(new JLabel("/"));
+        panelExpress.add(textoMaxDuracion);
+        menuControl2.add(panelExpress,BorderLayout.EAST);
         menuControl.add(menuControl2, BorderLayout.SOUTH);
         /*
         
@@ -193,12 +199,12 @@ public class Vista {
         
         finestra.add(jPrincipal);
         
-        //finestra.setSize(400, 300);
+        finestra.setSize(700, 450);
         finestra.setResizable(false);
         finestra.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         finestra.setLocationRelativeTo(null);
         
-        finestra.pack();
+        //finestra.pack();
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         finestra.setLocation(dim.width / 2 - finestra.getSize().width / 2, dim.height / 2 - finestra.getSize().height / 2);
 
@@ -285,7 +291,11 @@ public class Vista {
         return jBarraProgreso;
     }
 
-    public JLabel getTextoDuracion() {
-        return textoDuracion;
+    public JLabel getTextoTiempo() {
+        return textoTiempo;
+    }
+
+    public JLabel getTextoMaxDuracion() {
+        return textoMaxDuracion;
     }
 }

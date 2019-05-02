@@ -61,7 +61,7 @@ public class Controlador {
         vistaBarraProgreso = vista.getjBarraProgreso();
         vistaTablaListado = vista.getjTablaMusica();
 
-        hiloControladorBarraProgreso = new BarraProgreso(vistaBarraProgreso);
+        hiloControladorBarraProgreso = new BarraProgreso(vistaBarraProgreso, vista.getTextoTiempo());
     }
 
     public void afegirListenerBotons() {
@@ -106,7 +106,19 @@ public class Controlador {
         System.out.println("Hola");
         //Hilo itento de hacer la barra de progreso
         hiloControladorBarraProgreso.start();
-//
+        
+        try{
+        hiloControladorBarraProgreso.itsPlay();
+        Thread.sleep(5000);
+        hiloControladorBarraProgreso.itsPause();
+        Thread.sleep(5000);
+        hiloControladorBarraProgreso.itsContinuar();
+        Thread.sleep(5000);
+        hiloControladorBarraProgreso.itsStop();
+            
+        }catch(Exception ex){
+            
+        }
     }
 
     private void afegirListeners() {
@@ -132,31 +144,16 @@ public class Controlador {
                                 if (cancion.equals(audio.getNom())) {
                                     firstString.add(audio.getNom());
                                     //String duracion = audio.getDurada() +"";
-                                    firstString.add(audio.getDurada() + "");
+                                    firstString.add(convertTiempoStr(audio.getDurada()));
                                     listaCanciones.add(firstString);
                                     System.out.println(audio.getAutor() + " nom " + audio.getNom());
-            }
+                                }
                             }
                         }
 
                     }
                 }
-
-                /*
-                firstString = new ArrayList<>();
-                //ArrayList<ArrayList> listaCanciones = new ArrayList<>();
-                firstString.add("Musica 1");
-                firstString.add(null);
-                listaCanciones.add(firstString);
-                firstString = new ArrayList<>();
-                firstString.add("Musica 2");
-                firstString.add(null);
-                listaCanciones.add(firstString);
-                firstString = new ArrayList<>();
-                firstString.add("Musica 3");
-                firstString.add(null);
-                listaCanciones.add(firstString);
-                 */
+                
                 vistaTablaListado.setModel(new ModelTaula(listaCanciones));
                 RenderizadorCeldas renderizador = new RenderizadorCeldas();
                 for (int i = 0; i < vistaTablaListado.getColumnCount(); i++) {
@@ -168,33 +165,49 @@ public class Controlador {
             insertarDatosTablaMusica(listaCanciones);
         });
 
-        vistaTablaListado.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
-            if (vistaTablaListado.getRowCount() > 0) {
-               String nombre = vistaTablaListado.getValueAt(vistaTablaListado.getSelectedRow(), 0).toString();
-               listas.listaAudios.stream().filter((cancion) -> (cancion.getNom().equals(nombre))).map((cancion) -> {
-                   vista.getTextoTitulo().setText(cancion.getNom());
-                    return cancion;
-                }).map((cancion) -> {
-                    vista.getTextoAutor().setText(cancion.getAutor());
-                    return cancion;
-                }).forEachOrdered((cancion) -> {
-                    vista.getTextoDuracion().setText(cancion.getDurada() + "");
-                });
-            } else {
-                //Possiblemente vació
+        vistaTablaListado.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (vistaTablaListado.getRowCount() > 0) {
+                    String nombre = vistaTablaListado.getValueAt(vistaTablaListado.getSelectedRow(), 0).toString();
+                    listas.listaAudios.stream().filter((cancion) -> (cancion.getNom().equals(nombre))).map((cancion) -> {
+                        vista.getTextoTitulo().setText(cancion.getNom());
+                        return cancion;
+                    }).map((cancion) -> {
+                        vista.getTextoAutor().setText(cancion.getAutor());
+                        return cancion;
+                    }).forEachOrdered((cancion) -> {
+                        vista.getTextoMaxDuracion().setText(convertTiempoStr(cancion.getDurada()));
+                        vista.getjBarraProgreso().setMaximum(cancion.getDurada());
+                        
+                    });
+                } else {
+                    //Possiblemente vació
+                }
             }
         });
+        /*
+        vistaBarraProgreso.addAdjustmentListener((AdjustmentEvent e) -> {
 
-        vista.getjBarraProgreso().addAdjustmentListener((AdjustmentEvent e) -> {
-            e.getValue();
-            /*
             try {
                 audio.getPlayer().seek(0);
             } catch (BasicPlayerException ex) {
                 Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
-            }*/
+            }
+            vistaBarraProgreso.setValue(e.getValue());
         });
+         */    
+    }
 
+    private String convertTiempoStr(int num) {
+        int min = num / 60;
+        int seg = num % 60;
+
+        return (convertDecimal(min) + ":" + convertDecimal(seg));
+    }
+
+    private String convertDecimal(int num) {
+        return ((num < 10) ? "0" + num : "" + num);
     }
 
     private void insertarDatosTablaMusica(ArrayList<ArrayList> listaCanciones) {
