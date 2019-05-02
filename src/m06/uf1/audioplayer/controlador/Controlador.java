@@ -32,6 +32,7 @@ public class Controlador {
     private ArrayList<ArrayList> listaCanciones;
     private Vista vista;
     private Audio audio;
+    private String listaSeleccionadaAReporucir = null;
 
     private JComboBox vistaCombBoxAlbum;
     private JTable vistaTablaListado;
@@ -44,7 +45,7 @@ public class Controlador {
     public Controlador() {
         try {
             vista = new Vista();
-            audio = new Audio("audios/September.mp3");
+            audio = null;
 
             instanciaVariables();
 
@@ -118,14 +119,21 @@ public class Controlador {
 
             } else {
 
+                
                 ArrayList<String> firstString = new ArrayList<>();
 
                 String nombreLista = e.getItem().toString();
 
+                
+                listaSeleccionadaAReporucir = nombreLista;
+                vista.getTextoLlista().setText(nombreLista);
+                
+                
                 ListaReproduccion listaSeleccionada = new ListaReproduccion();
                 for (ListaReproduccion args : listas.listaRepro) {
                     if (args.getNom().equals(nombreLista)) {
                         System.out.println("Has llegado a: " + args.getNom());
+                        vista.getTextoDescr().setText(args.getDescripcio());
                         for (String cancion : args.getLista_audios()) {
                             firstString = new ArrayList<>();
                             for (AudioMP3 audio : listas.listaAudios) {
@@ -213,6 +221,37 @@ public class Controlador {
         public void actionPerformed(ActionEvent esdeveniment) {
             //Declarem el gestor d'esdeveniments
             Object gestorEsdeveniments = esdeveniment.getSource();
+            ArrayList<String> cancionesDentro = new ArrayList<>();
+            
+            //Si quieres poder seleccionar una cancion y reproducirla, haz que sea un map.
+            ArrayList<Audio> archivosAudio = new ArrayList<>();
+            
+            if (listaSeleccionadaAReporucir!=null) {
+                for (ListaReproduccion listaSeleccionada : listas.listaRepro) {
+                    if (listaSeleccionada.getNom().equals(listaSeleccionadaAReporucir)) {
+                        for (String direccion : listaSeleccionada.getLista_audios()) {
+                            archivosAudio.add(new Audio("audios\\" + direccion + ".mp3"));
+                        }
+                    }
+                }
+            }
+            
+            //foreach para ir pillando los audios y meterlos en un array
+           // ArrayList<AudioMP3> arrayAudios = new
+           
+            if (audio == null) {
+               vistaTablaListado.changeSelection(0, 0, false, true);
+               String nombre = vistaTablaListado.getValueAt(vistaTablaListado.getSelectedRow(), 0).toString();
+               System.out.println("Nombre : " + nombre);
+                for (AudioMP3 rutaMP3 : listas.listaAudios) {
+                    if (rutaMP3.getNom().equals(nombre)) {
+                        audio = new Audio(rutaMP3.getRuta());
+                    }
+                }
+
+            }
+           
+            //audio = archivosAudio.get(1);
             try {
                 if (gestorEsdeveniments.equals(vista.getPlay())) { //Si hem pitjat el boto play
                     audio.getPlayer().play(); //reproduim l'àudio
@@ -227,7 +266,7 @@ public class Controlador {
                     audio.getPlayer().resume(); //continuem la reproducció de l'àudio
                 }
             } catch (BasicPlayerException e) {
-                e.printStackTrace();
+                vistaTablaListado.changeSelection(0, 0, false, true);
             }
         }
     }
