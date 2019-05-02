@@ -114,7 +114,7 @@ public class Controlador {
             //Vaciar la lista
             listaCanciones = new ArrayList<>();
             if (e.getItem().toString().equals(LISTAR_TODAS)) {
-                //Todas las listas
+                System.out.println("Ha llegado a todos");
 
             } else {
 
@@ -170,9 +170,16 @@ public class Controlador {
 
         vistaTablaListado.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
             if (vistaTablaListado.getRowCount() > 0) {
-                vistaTablaListado.getValueAt(vistaTablaListado.getSelectedRow(), 0).toString();
-                String direccionAudio = "";
-                audio = new Audio(direccionAudio);
+               String nombre = vistaTablaListado.getValueAt(vistaTablaListado.getSelectedRow(), 0).toString();
+               listas.listaAudios.stream().filter((cancion) -> (cancion.getNom().equals(nombre))).map((cancion) -> {
+                   vista.getTextoTitulo().setText(cancion.getNom());
+                    return cancion;
+                }).map((cancion) -> {
+                    vista.getTextoAutor().setText(cancion.getAutor());
+                    return cancion;
+                }).forEachOrdered((cancion) -> {
+                    vista.getTextoDuracion().setText(cancion.getDurada() + "");
+                });
             } else {
                 //Possiblemente vació
             }
