@@ -104,11 +104,12 @@ public class Vista {
 
         textoLlista = new JLabel("Nombre Llista");
         textoTitulo = new JLabel("Titulo Canción");
-        imagenLabel = new JLabel("Imagen 300X200?");
-        int width= 300, height = 200;
+        imagenLabel = new JLabel();
+        int width= 200, height = 200;
         imagenLabel.setMinimumSize(new Dimension(width, height));
         imagenLabel.setMaximumSize(new Dimension(width, height));
         imagenLabel.setPreferredSize(new Dimension(width, height));
+        //imagenLabel.setIcon(new ImageIcon("covers\\AM_Cover.png"));
         imagenLabel.setBackground(Color.red);
         textoAutor = new JLabel("Yo mismo");
         textoDescr = new JLabel("Pues es muy bonito");

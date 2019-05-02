@@ -134,6 +134,7 @@ public class Controlador {
                     if (args.getNom().equals(nombreLista)) {
                         System.out.println("Has llegado a: " + args.getNom());
                         vista.getTextoDescr().setText(args.getDescripcio());
+                        vista.getImagenLabel().setIcon(new ImageIcon(args.getRutaImatge()));
                         for (String cancion : args.getLista_audios()) {
                             firstString = new ArrayList<>();
                             for (AudioMP3 audio : listas.listaAudios) {
