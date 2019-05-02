@@ -22,6 +22,7 @@ import org.w3c.dom.*;
 import java.io.*;
 import java.util.ArrayList;
 import static java.util.Collections.list;
+import javazoom.jlgui.basicplayer.BasicPlayerException;
 
 import m06.uf1.audioplayer.model.*;
 import m06.uf1.audioplayer.controlador.*;
@@ -37,10 +38,17 @@ public class Pruebas {
     static ArrayList<AudioMP3> listaAudios = new ArrayList<>();
     static ArrayList<ListaReproduccion> listaRepro = new ArrayList<>();
 
-    public static void main(String[] args) throws IOException, ParserConfigurationException, FileNotFoundException, ParseException {
-        
-        try {
+    public static void main(String[] args) throws IOException, ParserConfigurationException, FileNotFoundException, ParseException, BasicPlayerException {
 
+        Audio audio = new Audio("audios/September.mp3");
+        audio.getPlayer().play();
+
+        audio.getPlayer().seek(5000);
+        
+
+        /*
+            try {
+            
             Listas a = new Listas();
 
             Document doc = parseXML("carrega_dades.xml");
@@ -50,11 +58,11 @@ public class Pruebas {
             // System.out.println("Ruta " + ruta);
 
             getListasALL(doc);
-
-        } catch (SAXException ex) {
+            
+            } catch (SAXException ex) {
             Logger.getLogger(Pruebas.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+            }
+         */
     }
 
     //Añade todas als canciones a un Arraylist - para no tener que estar leyendo el fichero todo el rato

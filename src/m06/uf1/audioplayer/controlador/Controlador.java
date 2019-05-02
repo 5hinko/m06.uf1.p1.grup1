@@ -124,6 +124,8 @@ public class Controlador {
         vistaTablaListado.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
             if (vistaTablaListado.getRowCount() > 0) {
                 vistaTablaListado.getValueAt(vistaTablaListado.getSelectedRow(), 0).toString();
+                String direccionAudio = "";
+                audio = new Audio(direccionAudio);
             } else {
                 //Possiblemente vació
             }
@@ -131,6 +133,12 @@ public class Controlador {
 
         vista.getjBarraProgreso().addAdjustmentListener((AdjustmentEvent e) -> {
             e.getValue();
+            /*
+            try {
+                audio.getPlayer().seek(0);
+            } catch (BasicPlayerException ex) {
+                Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+            }*/
         });
 
     }
