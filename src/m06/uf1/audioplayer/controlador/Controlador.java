@@ -103,10 +103,10 @@ public class Controlador {
         vistaTablaListado.changeSelection(0, 0, false, false);
         if (vistaTablaListado.getRowCount() > 0) {
         }
-
+        System.out.println("Hola");
         //Hilo itento de hacer la barra de progreso
         hiloControladorBarraProgreso.start();
-
+//
     }
 
     private void afegirListeners() {
