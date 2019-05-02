@@ -106,18 +106,18 @@ public class Controlador {
         System.out.println("Hola");
         //Hilo itento de hacer la barra de progreso
         hiloControladorBarraProgreso.start();
-        
+
         try{
-        hiloControladorBarraProgreso.itsPlay();
-        Thread.sleep(5000);
-        hiloControladorBarraProgreso.itsPause();
-        Thread.sleep(5000);
-        hiloControladorBarraProgreso.itsContinuar();
-        Thread.sleep(5000);
-        hiloControladorBarraProgreso.itsStop();
-            
+            hiloControladorBarraProgreso.itsPlay();
+            Thread.sleep(5000);
+            hiloControladorBarraProgreso.itsPause();
+            Thread.sleep(5000);
+            hiloControladorBarraProgreso.itsContinuar();
+            Thread.sleep(5000);
+            hiloControladorBarraProgreso.itsStop();
+
         }catch(Exception ex){
-            
+
         }
     }
 
@@ -153,7 +153,7 @@ public class Controlador {
 
                     }
                 }
-                
+
                 vistaTablaListado.setModel(new ModelTaula(listaCanciones));
                 RenderizadorCeldas renderizador = new RenderizadorCeldas();
                 for (int i = 0; i < vistaTablaListado.getColumnCount(); i++) {
@@ -179,7 +179,7 @@ public class Controlador {
                     }).forEachOrdered((cancion) -> {
                         vista.getTextoMaxDuracion().setText(convertTiempoStr(cancion.getDurada()));
                         vista.getjBarraProgreso().setMaximum(cancion.getDurada());
-                        
+
                     });
                 } else {
                     //Possiblemente vació
@@ -196,7 +196,7 @@ public class Controlador {
             }
             vistaBarraProgreso.setValue(e.getValue());
         });
-         */    
+         */
     }
 
     private String convertTiempoStr(int num) {
