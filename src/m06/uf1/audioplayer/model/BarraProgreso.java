@@ -71,8 +71,6 @@ public class BarraProgreso extends Thread {
     private void controlladorGUI(int progresoNum) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                System.out.println("Hilo Start");
-
                 textoProgreso.setText(convertDecimal(progresoNum / 60) + ":" + convertDecimal(progresoNum % 60));
                 barraProgreso.setValue(progresoNum);
             }
@@ -115,9 +113,9 @@ public class BarraProgreso extends Thread {
         }
     }
 
-    public void posicionBarra(float num) {
-        numBucleProgress = (int) num;
-        controlladorGUI(0);
+    public void posicionBarra(int num) {
+        numBucleProgress = num;
+        controlladorGUI(num);
     }
 
 }
