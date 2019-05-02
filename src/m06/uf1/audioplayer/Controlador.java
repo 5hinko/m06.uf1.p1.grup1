@@ -36,6 +36,8 @@ public class Controlador {
 
     private static BarraProgreso hiloControladorBarraProgreso;
 
+    Listas listas = new Listas();
+
     public Controlador() {
         try {
             vista = new Vista();
@@ -43,7 +45,7 @@ public class Controlador {
 
             instanciaVariables();
 
-            //afegirDades();
+            afegirDades();
             afegirListenerBotons();
             afegirListeners();
         } catch (Exception ex) {
@@ -70,7 +72,6 @@ public class Controlador {
         vistaCombBoxAlbum.removeAllItems();
         //List<String> listaAlbums = new ArrayList<>;
 
-        Listas listas = new Listas();
         Document doc = listas.parseXML("carrega_dades.xml");
         listas.getCancionesALL(doc);
         listas.getListasALL(doc);
@@ -111,8 +112,54 @@ public class Controlador {
             listaCanciones = new ArrayList<>();
             if (e.getItem().toString().equals(LISTAR_TODAS)) {
                 //Todas las listas
+
             } else {
-                //Mirar cual quiere
+
+                ArrayList<String> firstString = new ArrayList<>();
+
+                String nombreLista = e.getItem().toString();
+
+                ListaReproduccion listaSeleccionada = new ListaReproduccion();
+                for (ListaReproduccion args : listas.listaRepro) {
+                    if (args.getNom().equals(nombreLista)) {
+                        System.out.println("Has llegado a: " + args.getNom());
+                        for (String cancion : args.getLista_audios()) {
+                            firstString = new ArrayList<>();
+                            for (AudioMP3 audio : listas.listaAudios) {
+                                if (cancion.equals(audio.getNom())) {
+                                    firstString.add(audio.getNom());
+                                    //String duracion = audio.getDurada() +"";
+                                    firstString.add(audio.getDurada() + "");
+                                    listaCanciones.add(firstString);
+                                    System.out.println(audio.getAutor() + " nom " + audio.getNom());
+                                }
+                            }
+                        }
+
+                    }
+                }
+
+                /*
+                firstString = new ArrayList<>();
+                //ArrayList<ArrayList> listaCanciones = new ArrayList<>();
+                firstString.add("Musica 1");
+                firstString.add(null);
+                listaCanciones.add(firstString);
+                firstString = new ArrayList<>();
+                firstString.add("Musica 2");
+                firstString.add(null);
+                listaCanciones.add(firstString);
+                firstString = new ArrayList<>();
+                firstString.add("Musica 3");
+                firstString.add(null);
+                listaCanciones.add(firstString);
+                 */
+                vistaTablaListado.setModel(new ModelTaula(listaCanciones));
+                RenderizadorCeldas renderizador = new RenderizadorCeldas();
+                for (int i = 0; i < vistaTablaListado.getColumnCount(); i++) {
+                    vistaTablaListado.getColumnModel().getColumn(i).setCellRenderer(renderizador);
+                }
+
             }
 
             insertarDatosTablaMusica(listaCanciones);
@@ -122,7 +169,7 @@ public class Controlador {
             if (vistaTablaListado.getRowCount() > 0) {
                 vistaTablaListado.getValueAt(vistaTablaListado.getSelectedRow(), 0).toString();
             } else {
-                //Possiblemente vació
+                //Possiblemente vaci
             }
         });
 
