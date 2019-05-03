@@ -36,7 +36,12 @@ public class BarraProgreso extends Thread {
         super.run(); //To change body of generated methods, choose Tools | Templates.
         System.out.println("Hilo Escucha");
         do {
-            //Start
+            try {
+                Thread.sleep(3);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(BarraProgreso.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                //Start
             while (start) {
                 int progresoNum = barraProgreso.getValue();
                 int limitProgreso = barraProgreso.getMaximum();
@@ -61,6 +66,9 @@ public class BarraProgreso extends Thread {
                             }
                         }
                     }
+                }
+                if(numBucleProgress >= limitProgreso){
+                    System.out.println("Terminado");
                 }
             }
             //reset

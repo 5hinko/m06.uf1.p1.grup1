@@ -106,20 +106,8 @@ public class Controlador {
         }
         System.out.println("Hola");
         //Hilo itento de hacer la barra de progreso
+
         hiloControladorBarraProgreso.start();
-
-        try {
-            hiloControladorBarraProgreso.itsPlay();
-            Thread.sleep(5000);
-            hiloControladorBarraProgreso.itsPause();
-            Thread.sleep(5000);
-            hiloControladorBarraProgreso.itsContinuar();
-            Thread.sleep(5000);
-            hiloControladorBarraProgreso.itsStop();
-
-        } catch (Exception ex) {
-
-        }
     }
 
     private void afegirListeners() {
@@ -159,13 +147,13 @@ public class Controlador {
 
                     }
                 }
-/*
+                /*
                 vistaTablaListado.setModel(new ModelTaula(listaCanciones));
                 RenderizadorCeldas renderizador = new RenderizadorCeldas();
                 for (int i = 0; i < vistaTablaListado.getColumnCount(); i++) {
                     vistaTablaListado.getColumnModel().getColumn(i).setCellRenderer(renderizador);
                 }
-*/
+                 */
             }
 
             insertarDatosTablaMusica(listaCanciones);
@@ -265,15 +253,19 @@ public class Controlador {
             try {
                 if (gestorEsdeveniments.equals(vista.getPlay())) { //Si hem pitjat el boto play
                     audio.getPlayer().play(); //reproduim l'àudio
+                    hiloControladorBarraProgreso.itsPlay();
                 } else if (gestorEsdeveniments.equals(vista.getStop())) {
                     //Si hem pitjat el boto stop
                     audio.getPlayer().stop(); //parem la reproducció de l'àudio
+                    hiloControladorBarraProgreso.itsStop();
                 } else if (gestorEsdeveniments.equals(vista.getPausa())) {
                     //Si hem pitjat el boto stop
                     audio.getPlayer().pause(); //pausem la reproducció de l'àudio
+                    hiloControladorBarraProgreso.itsPause();
                 } else if (gestorEsdeveniments.equals(vista.getContinuar())) {
                     //Si hem pitjat el boto stop
                     audio.getPlayer().resume(); //continuem la reproducció de l'àudio
+                    hiloControladorBarraProgreso.itsContinuar();
                 }
             } catch (BasicPlayerException e) {
                 vistaTablaListado.changeSelection(0, 0, false, true);
