@@ -35,7 +35,7 @@ public class Controlador {
     private String listaSeleccionadaAReporucir = null;
 
     private JComboBox vistaCombBoxAlbum;
-    private JTable vistaTablaListado;
+    public JTable vistaTablaListado;
     private JScrollBar vistaBarraProgreso;
 
     private static BarraProgreso hiloControladorBarraProgreso;
@@ -147,13 +147,7 @@ public class Controlador {
 
                     }
                 }
-                /*
-                vistaTablaListado.setModel(new ModelTaula(listaCanciones));
-                RenderizadorCeldas renderizador = new RenderizadorCeldas();
-                for (int i = 0; i < vistaTablaListado.getColumnCount(); i++) {
-                    vistaTablaListado.getColumnModel().getColumn(i).setCellRenderer(renderizador);
-                }
-                 */
+
             }
 
             insertarDatosTablaMusica(listaCanciones);
@@ -224,6 +218,7 @@ public class Controlador {
 
             //Si quieres poder seleccionar una cancion y reproducirla, haz que sea un map.
             ArrayList<Audio> archivosAudio = new ArrayList<>();
+            int i = 0;
 
             if (listaSeleccionadaAReporucir != null) {
                 for (ListaReproduccion listaSeleccionada : listas.listaRepro) {
@@ -244,11 +239,32 @@ public class Controlador {
                 for (AudioMP3 rutaMP3 : listas.listaAudios) {
                     if (rutaMP3.getNom().equals(nombre)) {
                         audio = new Audio(rutaMP3.getRuta());
+                        i = 0;
                     }
                 }
 
             }
-
+            String duracionS = (String) vistaTablaListado.getValueAt(i, 1);
+            //TODO ESTO CUANDO TERMINE EL AUDIO
+            //tienes un contador i, si ese contador, no es mayor al lenght del array "archivosAudio"
+            //Un array con todas las direcciones de los audios de la lista.
+            //haces audio = new Audio(archivosaudios.get(i)); -- o algo asi, eso cojera el siguiente archivo.
+            //y selecicionas el siguiente elemento de la columna tmb vistaTal.changeSelection(i,0,fadlse,true);
+            //Si es igual o mayo(igual) haces lo mismo pero selecionando el elemento 0.
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+                
+            
+            
             //audio = archivosAudio.get(1);
             try {
                 if (gestorEsdeveniments.equals(vista.getPlay())) { //Si hem pitjat el boto play
@@ -270,6 +286,8 @@ public class Controlador {
             } catch (BasicPlayerException e) {
                 vistaTablaListado.changeSelection(0, 0, false, true);
             }
+
         }
     }
+
 }
