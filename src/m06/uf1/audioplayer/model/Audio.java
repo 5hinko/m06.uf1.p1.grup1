@@ -8,7 +8,7 @@ import javazoom.jlgui.basicplayer.BasicPlayerException;
 public class Audio {
 
     BasicPlayer player;
-    
+
     public Audio(String fitxerAudio) {
         player = new BasicPlayer();
         try {

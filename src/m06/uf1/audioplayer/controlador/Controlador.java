@@ -252,12 +252,13 @@ public class Controlador {
         System.out.println("Has llegado a: " + args.getNom());
         //Algo feo pero funciona
         vista.getTextoDescr().setEditable(true);
-        vista.getTextoDescr().setText(args.getDescripcio());
+        vista.getTextoDescr().setText(
+                (listaSeleccionadaAReporucir.equals(LISTAR_TODAS)
+                ? "Llistado de todas las canciones" : args.getDescripcio()));
         vista.getTextoDescr().setEditable(false);
-        String defectBG = "covers\\ShinyBG.png";
         vista.getImagenLabel().setIcon(new ImageIcon(
                 (listaSeleccionadaAReporucir.equals(LISTAR_TODAS)
-                ? defectBG : args.getRutaImatge())));
+                ? "covers\\ShinyBG.png" : args.getRutaImatge())));
         for (String cancion : args.getLista_audios()) {
             firstString = new ArrayList<>();
             for (AudioMP3 audio : listas.listaAudios) {
@@ -311,8 +312,8 @@ public class Controlador {
         public void actionPerformed(ActionEvent esdeveniment) {
             //Declarem el gestor d'esdeveniments
             Object gestorEsdeveniments = esdeveniment.getSource();
-            ArrayList<String> cancionesDentro = new ArrayList<>();
             /*
+            ArrayList<String> cancionesDentro = new ArrayList<>();
             //Si quieres poder seleccionar una cancion y reproducirla, haz que sea un map.
             ArrayList<Audio> archivosAudio = new ArrayList<>();
             int i = 0;

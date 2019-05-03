@@ -5,20 +5,14 @@
  */
 package m06.uf1.audioplayer.model;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JLabel;
 import javax.swing.JScrollBar;
 import javax.swing.SwingUtilities;
-import javazoom.jlgui.basicplayer.BasicPlayer;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
-import javazoom.jlgui.basicplayer.BasicPlayerListener;
-import m06.uf1.audioplayer.controlador.Controlador;
 
 /**
  *
@@ -46,6 +40,7 @@ public class BarraProgreso extends Thread {
         System.out.println("Hilo DJ");
         do {
             try {
+                //Si no espera hace el bucle sin parar para ver la variable
                 Thread.sleep(3);
             } catch (InterruptedException ex) {
                 Logger.getLogger(BarraProgreso.class.getName()).log(Level.SEVERE, null, ex);

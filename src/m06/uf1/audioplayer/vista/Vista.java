@@ -9,7 +9,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.util.ArrayList;
-import java.util.HashMap;
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import m06.uf1.audioplayer.model.ModelTaula;
@@ -49,7 +48,7 @@ public class Vista {
         jPrincipal = new JPanel(new GridBagLayout());
         GridBagConstraints constraint = new GridBagConstraints();
 
-        jPrincipal.setBorder(BorderFactory.createEmptyBorder(30,30,30,30));
+        jPrincipal.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
 
         columnaLista = new JPanel();
         columnaLista.setLayout(new BoxLayout(columnaLista, BoxLayout.PAGE_AXIS));

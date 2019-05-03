@@ -9,12 +9,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import static m06.uf1.audioplayer.controlador.Pruebas.parseXML;
 import m06.uf1.audioplayer.model.AudioMP3;
 import m06.uf1.audioplayer.model.ListaReproduccion;
 import org.json.simple.JSONArray;
@@ -84,7 +81,7 @@ public class Listas {
             ArrayList<String> lista_canciones = new ArrayList<>();
 
             JSONArray lista_archivos_audio = (JSONArray) lista.get("archius_audi");
-        
+
             //lista de canciones
             for (Object object : lista_archivos_audio) {
                 lista_canciones.add(object.toString());

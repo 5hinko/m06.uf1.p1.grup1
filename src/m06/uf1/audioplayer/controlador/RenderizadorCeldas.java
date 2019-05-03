@@ -9,7 +9,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
 /**
@@ -33,22 +32,20 @@ public class RenderizadorCeldas extends DefaultTableCellRenderer {
             this.setForeground(Color.white);
         } else {
             this.setFont(normal);
-            if (row % 2 == 0) {
-                this.setBackground(Color.white);
-            } else {
-                this.setBackground(new Color(150, 200, 255));
-            }
+            this.setBackground(
+                    (row % 2 == 0)
+                            ? Color.white : new Color(150, 200, 255));
         }
         if (column == 1) {
             //this.setForeground(Color.red);
             this.setFont(courier);
             //table.setRowHeight(row, HEIGHT);
         }
-        
+
         //Tamaño de las celdas
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         table.getColumnModel().getColumn(0).setPreferredWidth(170);
-        table.getColumnModel().getColumn(1).setPreferredWidth(40); 
+        table.getColumnModel().getColumn(1).setPreferredWidth(40);
         //jTablaMusica.getColumnModel().getColumn(1).setMinWidth(1); 
         return this;
     }
