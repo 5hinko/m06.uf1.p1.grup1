@@ -27,8 +27,8 @@ public class Vista {
     private JTable jTablaMusica;
 
     private JLabel imagenLabel;
-    private JLabel textoLlista;
-    private JLabel textoDescr;
+    private JLabel textoAlbumTitulo;
+    private JTextArea textoDescr;
     private JLabel textoTitulo;
     private JLabel textoAutor;
     private JScrollBar jBarraProgreso;
@@ -46,16 +46,16 @@ public class Vista {
 
         jPrincipal = new JPanel(new GridBagLayout());
         GridBagConstraints constraint = new GridBagConstraints();
-        
-        jPrincipal.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+
+        jPrincipal.setBorder(BorderFactory.createEmptyBorder(30,30,30,30));
 
         columnaLista = new JPanel();
         columnaLista.setLayout(new BoxLayout(columnaLista, BoxLayout.PAGE_AXIS));
-        columnaLista.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        columnaLista.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         jBoxAlbum = new JComboBox();
         jTablaMusica = new JTable();
-       
+
         jBoxAlbum.addItem("Todo");
         jBoxAlbum.addItem("Album 1");
         jBoxAlbum.addItem("Album 2");/*
@@ -82,31 +82,35 @@ public class Vista {
         firstString.add("Musica 3");
         firstString.add("03:30");
         listaCanciones.add(firstString);
-        
+
         jTablaMusica.setModel(new ModelTaula(listaCanciones));
-        
+
+        //Selecionar solo uno 
+        jTablaMusica.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        //Dimesiones de la tabla general
+        jTablaMusica.setPreferredScrollableViewportSize(new Dimension(
+                (jTablaMusica.getPreferredSize().width * 3) / 2,
+                jTablaMusica.getRowHeight() * 22));
+
+        //Colores y select
         RenderizadorCeldas renderizador = new RenderizadorCeldas();
         for (int i = 0; i < jTablaMusica.getColumnCount(); i++) {
             jTablaMusica.getColumnModel().getColumn(i).setCellRenderer(renderizador);
         }
-        
-        jTablaMusica.setPreferredScrollableViewportSize(new Dimension(
-                (jTablaMusica.getPreferredSize().width *3)/2,
-                jTablaMusica.getRowHeight() * 20));
         jScroll = new JScrollPane(jTablaMusica);
-        
+
         columnaLista.add(jBoxAlbum);
         columnaLista.add(jScroll);
 
-        //Columna Musica
+        //Columna Musica Layout
         columnaMusica = new JPanel();
         columnaMusica.setLayout(new BorderLayout());
-        columnaMusica.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        columnaMusica.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        textoLlista = new JLabel("Nombre Llista");
+        textoAlbumTitulo = new JLabel("Nombre Llista");
         textoTitulo = new JLabel("Titulo Canción");
         imagenLabel = new JLabel();
-        int width= 200, height = 200;
+        int width = 200, height = 200;
         imagenLabel.setMinimumSize(new Dimension(width, height));
         imagenLabel.setMaximumSize(new Dimension(width, height));
         imagenLabel.setPreferredSize(new Dimension(width, height));
@@ -114,50 +118,49 @@ public class Vista {
         imagenLabel.setBackground(Color.red);
         imagenLabel.setBorder(BorderFactory.createTitledBorder(""));
         textoAutor = new JLabel("Yo mismo");
-        textoDescr = new JLabel("Pues es muy bonito");
-        
+        textoDescr = new JTextArea("Pues es muy bonito", 2, 33);
+        textoDescr.setEditable(false);
+        textoDescr.setBorder(BorderFactory.createTitledBorder("Descripción"));
+
         jBarraProgreso = new JScrollBar();
         jBarraProgreso.setOrientation(JScrollBar.HORIZONTAL);
         jBarraProgreso.setMaximum(0);
         jBarraProgreso.setMaximum(100);
-        jBarraProgreso.setPreferredSize(new Dimension(250,15));
+        jBarraProgreso.setPreferredSize(new Dimension(250, 15));
         textoTiempo = new JLabel("0:00");
         textoMaxDuracion = new JLabel("03:00");
 
-        //Titulo 
-        menuControl = new JPanel( new FlowLayout());
-        menuControl.add(textoLlista);
+        //Titulo LAyout
+        menuControl = new JPanel(new FlowLayout());
+        menuControl.add(textoAlbumTitulo);
         menuControl.add(new JLabel(" - "));
         menuControl.add(textoTitulo);
-        
-        columnaMusica.add(menuControl,BorderLayout.NORTH);
 
-        //Centro
+        columnaMusica.add(menuControl, BorderLayout.NORTH);
+
+        //Centro LAyout
         menuControl = new JPanel();
         menuControl.setLayout(new BorderLayout());
         imagenLabel.setHorizontalAlignment(SwingConstants.CENTER);
         menuControl.add(imagenLabel, BorderLayout.NORTH);
-        
+
         menuControl2 = new JPanel();
-        menuControl2.setLayout( new BoxLayout(menuControl2, BoxLayout.PAGE_AXIS));
-        JPanel menuControlExtension = new JPanel(new FlowLayout());
-        menuControlExtension.add(new JLabel("Autor: "));
-        menuControlExtension.add(textoAutor);
-        menuControl2.add(menuControlExtension);
-        menuControlExtension = new JPanel(new FlowLayout());
-        menuControlExtension.add(new JLabel("Descripción: "));
-        menuControlExtension.add(textoDescr);
-        menuControl2.add(menuControlExtension);
-        menuControl.add(menuControl2, BorderLayout.CENTER);
-        
-        menuControl2 = new JPanel( new BorderLayout());
-        menuControl2.setBorder(BorderFactory.createEmptyBorder(10,5,0,5));
-        menuControl2.add(jBarraProgreso,BorderLayout.CENTER);
+        menuControl2.setLayout(new BoxLayout(menuControl2, BoxLayout.PAGE_AXIS));
         JPanel panelExpress = new JPanel(new FlowLayout());
+        panelExpress.add(new JLabel("Autor: "));
+        panelExpress.add(textoAutor);
+        menuControl2.add(panelExpress);
+        menuControl2.add(textoDescr);
+        menuControl.add(menuControl2, BorderLayout.CENTER);
+
+        menuControl2 = new JPanel(new BorderLayout());
+        menuControl2.setBorder(BorderFactory.createEmptyBorder(10, 5, 0, 5));
+        menuControl2.add(jBarraProgreso, BorderLayout.CENTER);
+        panelExpress = new JPanel(new FlowLayout());
         panelExpress.add(textoTiempo);
         panelExpress.add(new JLabel("/"));
         panelExpress.add(textoMaxDuracion);
-        menuControl2.add(panelExpress,BorderLayout.EAST);
+        menuControl2.add(panelExpress, BorderLayout.EAST);
         menuControl.add(menuControl2, BorderLayout.SOUTH);
         /*
         
@@ -169,14 +172,13 @@ public class Vista {
         
         menuControl.add(jBarraProgreso);
         menuControl.add(textoDuracion);*/
-        
-        columnaMusica.add(menuControl,BorderLayout.CENTER);
 
-        //Abajo Control
+        columnaMusica.add(menuControl, BorderLayout.CENTER);
 
+        //Abajo Control Layout
         menuControl = new JPanel();
-        menuControl.setLayout(new GridLayout(0,4));
-        menuControl.setBorder(BorderFactory.createEmptyBorder(20,5,0,5));
+        menuControl.setLayout(new GridLayout(0, 4));
+        menuControl.setBorder(BorderFactory.createEmptyBorder(10, 5, 0, 5));
         play = new JButton("Play");
         stop = new JButton("Stop");
         pausa = new JButton("Pause");
@@ -198,15 +200,15 @@ public class Vista {
         constraint.gridx = 1;
         constraint.gridy = 0;
         jPrincipal.add(columnaMusica, constraint);
-        
+
         finestra.add(jPrincipal);
-        
-        finestra.setSize(700, 450);
+
+        //finestra.setSize(700, 450);
         finestra.setResizable(false);
         finestra.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         finestra.setLocationRelativeTo(null);
-        
-        //finestra.pack();
+
+        finestra.pack();
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         finestra.setLocation(dim.width / 2 - finestra.getSize().width / 2, dim.height / 2 - finestra.getSize().height / 2);
 
@@ -273,11 +275,11 @@ public class Vista {
         return imagenLabel;
     }
 
-    public JLabel getTextoLlista() {
-        return textoLlista;
+    public JLabel getTextoAlbumTitulo() {
+        return textoAlbumTitulo;
     }
 
-    public JLabel getTextoDescr() {
+    public JTextArea getTextoDescr() {
         return textoDescr;
     }
 

@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JScrollBar;
 import javax.swing.SwingUtilities;
-import sun.misc.VM;
 
 /**
  *
@@ -41,7 +40,7 @@ public class BarraProgreso extends Thread {
             } catch (InterruptedException ex) {
                 Logger.getLogger(BarraProgreso.class.getName()).log(Level.SEVERE, null, ex);
             }
-                //Start
+            //Start
             while (start) {
                 int progresoNum = barraProgreso.getValue();
                 int limitProgreso = barraProgreso.getMaximum();
@@ -51,6 +50,7 @@ public class BarraProgreso extends Thread {
                     try {
                         java.lang.Thread.sleep(980);
                     } catch (Exception e) {
+                        Logger.getLogger(BarraProgreso.class.getName()).log(Level.SEVERE, null, e);
                     }
 
                     // Runs inside of the Swing UI thread
@@ -67,7 +67,8 @@ public class BarraProgreso extends Thread {
                         }
                     }
                 }
-                if(numBucleProgress >= limitProgreso){
+                if (numBucleProgress >= limitProgreso) {
+                    itsStop();
                     System.out.println("Terminado");
                 }
             }
@@ -78,6 +79,7 @@ public class BarraProgreso extends Thread {
 
     private void controlladorGUI(int progresoNum) {
         SwingUtilities.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 textoProgreso.setText(convertDecimal(progresoNum / 60) + ":" + convertDecimal(progresoNum % 60));
                 barraProgreso.setValue(progresoNum);
@@ -105,7 +107,7 @@ public class BarraProgreso extends Thread {
         start = false;
         stop = true;
         itsContinuar();
-        
+
         numBucleProgress = 0;
         controlladorGUI(0);
     }

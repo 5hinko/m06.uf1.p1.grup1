@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
 /**
@@ -44,8 +45,9 @@ public class RenderizadorCeldas extends DefaultTableCellRenderer {
             //table.setRowHeight(row, HEIGHT);
         }
         
+        //Tamaño de las celdas
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        table.getColumnModel().getColumn(0).setPreferredWidth(120);
+        table.getColumnModel().getColumn(0).setPreferredWidth(170);
         table.getColumnModel().getColumn(1).setPreferredWidth(40); 
         //jTablaMusica.getColumnModel().getColumn(1).setMinWidth(1); 
         return this;

@@ -52,6 +52,8 @@ public class Controlador {
             afegirDades();
             afegirListenerBotons();
             afegirListeners();
+
+            vistaCombBoxAlbum.setSelectedIndex(0);
         } catch (Exception ex) {
             Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -73,8 +75,17 @@ public class Controlador {
     }
 
     public void afegirDades() throws ParserConfigurationException, SAXException, IOException, FileNotFoundException, ParseException {
+        /**
+         * *
+         * No hace falta insertar los datos porque al pasa por El ComboBox al
+         * crear la 1r vez ya lo hace
+         */
+        //Intro Tabla y vaciar la lista
+        listaCanciones = new ArrayList<>();
+
+        insertarDatosTablaMusica(listaCanciones);
+
         vistaCombBoxAlbum.removeAllItems();
-        //List<String> listaAlbums = new ArrayList<>;
 
         Document doc = listas.parseXML("carrega_dades.xml");
         listas.getCancionesALL(doc);
@@ -82,7 +93,6 @@ public class Controlador {
 
         //Temporal - no debraia ser asi
         vistaCombBoxAlbum.addItem(LISTAR_TODAS);
-        vistaCombBoxAlbum.setSelectedIndex(0);
         for (ListaReproduccion lista_repro : listas.listaRepro) {
             vistaCombBoxAlbum.addItem(lista_repro.getNom());
         }
@@ -98,15 +108,9 @@ public class Controlador {
          */
         //Intro Tabla y vaciar la lista
         listaCanciones = new ArrayList<>();
-
         insertarDatosTablaMusica(listaCanciones);
 
-        vistaTablaListado.changeSelection(0, 0, false, false);
-        if (vistaTablaListado.getRowCount() > 0) {
-        }
-        System.out.println("Hola");
         //Hilo itento de hacer la barra de progreso
-
         hiloControladorBarraProgreso.start();
     }
 
@@ -114,23 +118,25 @@ public class Controlador {
         vistaCombBoxAlbum.addItemListener((ItemEvent e) -> {
             //Vaciar la lista
             listaCanciones = new ArrayList<>();
-            if (e.getItem().toString().equals(LISTAR_TODAS)) {
-                System.out.println("Ha llegado a todos");
+            ArrayList<String> firstString;
+            String nombreLista = e.getItem().toString();
 
+            if (nombreLista.equals(LISTAR_TODAS)) {
+                System.out.println("Ha llegado a todos");
+                
             } else {
 
-                ArrayList<String> firstString = new ArrayList<>();
-
-                String nombreLista = e.getItem().toString();
-
                 listaSeleccionadaAReporucir = nombreLista;
-                vista.getTextoLlista().setText(nombreLista);
+                vista.getTextoAlbumTitulo().setText(nombreLista);
 
                 ListaReproduccion listaSeleccionada = new ListaReproduccion();
                 for (ListaReproduccion args : listas.listaRepro) {
                     if (args.getNom().equals(nombreLista)) {
                         System.out.println("Has llegado a: " + args.getNom());
+                        //Algo feo pero funciona
+                        vista.getTextoDescr().setEditable(true);
                         vista.getTextoDescr().setText(args.getDescripcio());
+                        vista.getTextoDescr().setEditable(false);
                         vista.getImagenLabel().setIcon(new ImageIcon(args.getRutaImatge()));
                         for (String cancion : args.getLista_audios()) {
                             firstString = new ArrayList<>();
@@ -147,13 +153,6 @@ public class Controlador {
 
                     }
                 }
-                /*
-                vistaTablaListado.setModel(new ModelTaula(listaCanciones));
-                RenderizadorCeldas renderizador = new RenderizadorCeldas();
-                for (int i = 0; i < vistaTablaListado.getColumnCount(); i++) {
-                    vistaTablaListado.getColumnModel().getColumn(i).setCellRenderer(renderizador);
-                }
-                 */
             }
 
             insertarDatosTablaMusica(listaCanciones);

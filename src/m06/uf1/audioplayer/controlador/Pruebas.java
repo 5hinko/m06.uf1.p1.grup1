@@ -38,14 +38,43 @@ public class Pruebas {
     static ArrayList<AudioMP3> listaAudios = new ArrayList<>();
     static ArrayList<ListaReproduccion> listaRepro = new ArrayList<>();
 
-    public static void main(String[] args) throws IOException, ParserConfigurationException, FileNotFoundException, ParseException, BasicPlayerException {
+    public static void main(String[] args) throws IOException, ParserConfigurationException, FileNotFoundException, ParseException, BasicPlayerException, InterruptedException {
 
         Audio audio = new Audio("audios/September.mp3");
         audio.getPlayer().play();
 
-        audio.getPlayer().seek(5000);
-        
+        audio.getPlayer().seek(50);
+        // Set Volume (0 to 1.0).
+        //audio.getPlayer().setGain(0.85);
+        audio.getPlayer().setPan(-0.5f);
+        //audio.getPlayer().setSleepTime(0);
+        do{
+        System.out.println("gain "+ 
+                audio.getPlayer().getGainValue());
+        System.out.println("LineBuffer "+
+                audio.getPlayer().getLineBufferSize());
+        System.out.println("maxGain "+ 
+                audio.getPlayer().getMaximumGain());
+        System.out.println("minGain" +
+                audio.getPlayer().getMinimumGain());
+        System.out.println("name " +
+                audio.getPlayer().getMixerName());
+        System.out.println("pan " +
+                audio.getPlayer().getPan());
+        System.out.println("Precision "+ 
+                audio.getPlayer().getPrecision());
+        System.out.println("sleep time " +
+                audio.getPlayer().getSleepTime());
+        System.out.println("status " +
+                audio.getPlayer().getStatus());
+        System.out.println("gainControl " +
+                audio.getPlayer().hasGainControl());
+        System.out.println("panControl "+ 
+                audio.getPlayer().hasPanControl());
 
+        System.out.println("- - - - -- -");
+        Thread.sleep(800);
+        }while(true);
         /*
             try {
             
