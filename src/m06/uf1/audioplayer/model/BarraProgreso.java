@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JScrollBar;
 import javax.swing.SwingUtilities;
+import m06.uf1.audioplayer.controlador.Controlador;
 
 /**
  *
@@ -33,7 +34,7 @@ public class BarraProgreso extends Thread {
     @Override
     public void run() {
         super.run(); //To change body of generated methods, choose Tools | Templates.
-        System.out.println("Hilo Escucha");
+        System.out.println("Hilo DJ");
         do {
             try {
                 Thread.sleep(3);
@@ -69,12 +70,12 @@ public class BarraProgreso extends Thread {
                 }
                 if (numBucleProgress >= limitProgreso) {
                     itsStop();
-                    System.out.println("Terminado");
+                    System.out.println("Hilo Terminado");
+                    Controlador.cancionTerminada();
                 }
             }
             //reset
         } while (1 == 1);
-        //System.out.println("No Me dejes morir!");
     }
 
     private void controlladorGUI(int progresoNum) {
@@ -98,7 +99,12 @@ public class BarraProgreso extends Thread {
     }
 
     public void itsPlay() {
-        barraProgreso.setValue(0);
+        itsStop();
+        try {
+            Thread.sleep(3);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(BarraProgreso.class.getName()).log(Level.SEVERE, null, ex);
+        }
         todosMismoVariable(false);
         start = true;
     }
