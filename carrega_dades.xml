@@ -12,28 +12,28 @@
         <nom>Celebration</nom>
         <autor>Kool and the Gang</autor>
         <album>Celebrate!r</album>
-        <durada>30</durada>
+        <durada>31</durada>
         <ruta>audios\Celebration.mp3</ruta>
       </arxiu>
       <arxiu>
         <nom>Rasputin</nom>
         <autor>Boney M</autor>
         <album>Nightflight to Venus</album>
-        <durada>30</durada>
+        <durada>29</durada>
         <ruta>audios\Rasputin.mp3</ruta>
       </arxiu>
       <arxiu>
         <nom>GetDownOnIt</nom>
         <autor>Kool and the Gang</autor>
         <album>Something Special</album>
-        <durada>30</durada>
+        <durada>31</durada>
         <ruta>audios\GetDownOnIt.mp3</ruta>
       </arxiu>
       <arxiu>
         <nom>FourOutOfFive</nom>
         <autor>Arctic Monkeys</autor>
         <album>Tranquility Base Hotel And Casino</album>
-        <durada>30</durada>
+        <durada>31</durada>
         <ruta>audios\FourOutOfFive.mp3</ruta>
       </arxiu>
       <arxiu>
@@ -57,6 +57,27 @@
         <durada>30</durada>
         <ruta>audios\TheWorldsFirstEverMonsterTruckFrontFlip.mp3</ruta>
       </arxiu>
+      <arxiu>
+        <nom>Party Animal</nom>
+        <autor>Mayday</autor>
+        <album>Mayday</album>
+        <durada>32</durada>
+        <ruta>audios\PartyAnimal.mp3</ruta>
+      </arxiu>
+      <arxiu>
+        <nom>Tough</nom>
+        <autor>Mayday</autor>
+        <album>Mayday</album>
+        <durada>25</durada>
+        <ruta>audios\Tough.mp3</ruta>
+      </arxiu>
+      <arxiu>
+        <nom>Ren Ran</nom>
+        <autor>張燕峰</autor>
+        <album>Cover</album>
+        <durada>28</durada>
+        <ruta>audios\RenRan.mp3</ruta>
+      </arxiu>
    </audios>
     <llistes_reproduccio>
       <llista>
@@ -66,6 +87,10 @@
       <llista>
         <nom>Llista AM</nom>
         <ruta_llista>llistes\llista_AM.json</ruta_llista>
+      </llista>
+      <llista>
+        <nom>Llista Mayday</nom>
+        <ruta_llista>llistes\llista_Mayday.json</ruta_llista>
       </llista>
    </llistes_reproduccio>
 </aplicacio>

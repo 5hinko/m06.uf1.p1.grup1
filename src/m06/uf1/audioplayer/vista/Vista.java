@@ -9,7 +9,9 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.*;
+import javax.swing.table.TableColumnModel;
 import m06.uf1.audioplayer.model.ModelTaula;
 import m06.uf1.audioplayer.controlador.RenderizadorCeldas;
 
@@ -73,17 +75,22 @@ public class Vista {
         ArrayList<String> firstString = new ArrayList<>();
         firstString.add("Musica 1");
         firstString.add("03:30");
+        firstString.add("03:30");
         listaCanciones.add(firstString);
         firstString = new ArrayList<>();
         firstString.add("Musica 2        ");
+        firstString.add(null);
         firstString.add(null);
         listaCanciones.add(firstString);
         firstString = new ArrayList<>();
         firstString.add("Musica 3");
         firstString.add("03:30");
+        firstString.add("03:30");
         listaCanciones.add(firstString);
 
         jTablaMusica.setModel(new ModelTaula(listaCanciones));
+        TableColumnModel tcm = jTablaMusica.getColumnModel();
+        tcm.removeColumn(tcm.getColumn(2));
 
         //Selecionar solo uno 
         jTablaMusica.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -117,6 +124,7 @@ public class Vista {
         //imagenLabel.setIcon(new ImageIcon("covers\\AM_Cover.png"));
         imagenLabel.setBackground(Color.red);
         imagenLabel.setBorder(BorderFactory.createTitledBorder(""));
+        imagenLabel.setIcon(new ImageIcon("covers\\ShinyBG.png"));
         textoAutor = new JLabel("Yo mismo");
         textoDescr = new JTextArea("Pues es muy bonito", 2, 33);
         textoDescr.setEditable(false);

@@ -5,11 +5,19 @@
  */
 package m06.uf1.audioplayer.model;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JLabel;
 import javax.swing.JScrollBar;
 import javax.swing.SwingUtilities;
+import javazoom.jlgui.basicplayer.BasicPlayer;
+import javazoom.jlgui.basicplayer.BasicPlayerException;
+import javazoom.jlgui.basicplayer.BasicPlayerListener;
 import m06.uf1.audioplayer.controlador.Controlador;
 
 /**
@@ -21,19 +29,20 @@ public class BarraProgreso extends Thread {
     private JScrollBar barraProgreso;
     private JLabel textoProgreso;
     private int numBucleProgress = 0;
+    private Thread threadSiguiente;
     private boolean start;
     private boolean pause;
     private boolean stop;
 
-    public BarraProgreso(Object barra, Object progreso) {
+    public BarraProgreso(Object barra, Object progreso, Thread threadSiguiente) {
         this.barraProgreso = (JScrollBar) barra;
         this.textoProgreso = (JLabel) progreso;
         todosMismoVariable(false);
+        this.threadSiguiente = threadSiguiente;
     }
 
     @Override
     public void run() {
-        super.run(); //To change body of generated methods, choose Tools | Templates.
         System.out.println("Hilo DJ");
         do {
             try {
@@ -69,9 +78,15 @@ public class BarraProgreso extends Thread {
                     }
                 }
                 if (numBucleProgress >= limitProgreso) {
-                    itsStop();
+                    try {
+                        itsStop();
+                    } catch (BasicPlayerException ex) {
+                        Logger.getLogger(BarraProgreso.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     System.out.println("Hilo Terminado");
-                    Controlador.cancionTerminada();
+                    //threadSiguiente.start();
+                    ExecutorService executor = Executors.newCachedThreadPool();
+                    executor.submit(threadSiguiente);
                 }
             }
             //reset
@@ -98,7 +113,7 @@ public class BarraProgreso extends Thread {
         stop = active;
     }
 
-    public void itsPlay() {
+    public void itsPlay() throws BasicPlayerException {
         itsStop();
         try {
             Thread.sleep(3);
@@ -109,7 +124,7 @@ public class BarraProgreso extends Thread {
         start = true;
     }
 
-    public void itsStop() {
+    public void itsStop() throws BasicPlayerException {
         start = false;
         stop = true;
         itsContinuar();
@@ -122,7 +137,7 @@ public class BarraProgreso extends Thread {
         pause = true;
     }
 
-    public void itsContinuar() {
+    public void itsContinuar() throws BasicPlayerException {
         pause = false;
         synchronized ((Object) barraProgreso) {
             barraProgreso.notify();

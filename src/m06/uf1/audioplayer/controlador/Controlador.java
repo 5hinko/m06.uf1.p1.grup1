@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
+import javax.swing.table.TableColumnModel;
 import javax.xml.parsers.ParserConfigurationException;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
 import m06.uf1.audioplayer.model.ModelTaula;
@@ -27,11 +28,11 @@ public class Controlador {
     private final String LISTAR_TODAS = "Todas las listas";
     private ArrayList<ArrayList> listaCanciones;
     private Vista vista;
-    private Audio audio;
+    private static Audio audio;
     private String listaSeleccionadaAReporucir = null;
 
     private JComboBox vistaCombBoxAlbum;
-    public JTable vistaTablaListado;
+    public static JTable vistaTablaListado;
     private JScrollBar vistaBarraProgreso;
 
     private static BarraProgreso hiloControladorBarraProgreso;
@@ -46,9 +47,8 @@ public class Controlador {
             instanciaVariables();
 
             afegirDades();
-            afegirListenerBotons();
             afegirListeners();
-
+            afegirListenerBotons();
             //Seleciona el 1r pero no carga, los demas si
             //vistaCombBoxAlbum.setSelectedIndex(1);
             vistaCombBoxAlbum.setSelectedIndex(0);
@@ -62,7 +62,8 @@ public class Controlador {
         vistaBarraProgreso = vista.getjBarraProgreso();
         vistaTablaListado = vista.getjTablaMusica();
 
-        hiloControladorBarraProgreso = new BarraProgreso(vistaBarraProgreso, vista.getTextoTiempo());
+        listaSeleccionadaAReporucir = LISTAR_TODAS;
+        hiloControladorBarraProgreso = new BarraProgreso(vistaBarraProgreso, vista.getTextoTiempo(), new cancionTerminda());
     }
 
     public void afegirListenerBotons() {
@@ -73,15 +74,6 @@ public class Controlador {
     }
 
     public void afegirDades() throws ParserConfigurationException, SAXException, IOException, FileNotFoundException, ParseException {
-        /**
-         * *
-         * No hace falta insertar los datos porque al pasa por El ComboBox al
-         * crear la 1r vez ya lo hace
-         */
-        //Intro Tabla y vaciar la lista
-        listaCanciones = new ArrayList<>();
-
-        insertarDatosTablaMusica(listaCanciones);
 
         vistaCombBoxAlbum.removeAllItems();
 
@@ -112,14 +104,13 @@ public class Controlador {
             listaCanciones = new ArrayList<>();
             String nombreLista = e.getItem().toString();
 
+            listaSeleccionadaAReporucir = nombreLista;
             vista.getTextoAlbumTitulo().setText(vistaCombBoxAlbum.getSelectedItem().toString());
             if (nombreLista.equals(LISTAR_TODAS)) {
                 for (ListaReproduccion args : listas.listaRepro) {
                     introducirDatosLista(args);
                 }
             } else {
-
-                listaSeleccionadaAReporucir = nombreLista;
                 ListaReproduccion listaSeleccionada = new ListaReproduccion();
                 for (ListaReproduccion args : listas.listaRepro) {
                     if (args.getNom().equals(nombreLista)) {
@@ -158,15 +149,26 @@ public class Controlador {
                 JTable table = (JTable) mouseEvent.getSource();
                 Point point = mouseEvent.getPoint();
                 int rowSelected = table.rowAtPoint(point);
-                if (mouseEvent.getClickCount() == 1 && table.getSelectedRow() != -1) {
+                if (mouseEvent.getClickCount() <= 2 && table.getSelectedRow() != -1) {
                     // your valueChanged overridden method 
 
-                    String nombre = (String) vistaTablaListado.getValueAt(rowSelected, 0).toString();
-                    selecionarCancion(nombre);
+                    selecionarCancion(rowSelected);
+
+                    if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
+                        try {
+                            // your valueChanged overridden method
+
+                            audio.getPlayer().play(); //reproduim l'àudio
+                            hiloControladorBarraProgreso.itsPlay();
+                        } catch (BasicPlayerException ex) {
+                            Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+
                 }
-                System.out.println("1 veces" + " " + vistaTablaListado.getSelectedRow());
             }
-        });
+        }
+        );
 
         /*
         vistaBarraProgreso.addAdjustmentListener((AdjustmentEvent e) -> {
@@ -181,7 +183,8 @@ public class Controlador {
          */
     }
 
-    private void selecionarCancion(String nombre) {
+    private void selecionarCancion(int rowSelected) {
+        String nombre = (String) vistaTablaListado.getValueAt(rowSelected, 0).toString();
         listas.listaAudios.stream().filter((cancion) -> (cancion.getNom().equals(nombre))).map((cancion) -> {
             vista.getTextoTitulo().setText(cancion.getNom());
             return cancion;
@@ -191,13 +194,15 @@ public class Controlador {
         }).forEachOrdered((cancion) -> {
             vista.getTextoMaxDuracion().setText(convertTiempoStr(cancion.getDurada()));
             vistaBarraProgreso.setMaximum(cancion.getDurada());
-            /*try {
-
-                audio.getPlayer().stop();
-                hiloControladorBarraProgreso.itsStop();
+            try {
+                if (audio != null) {
+                    audio.getPlayer().stop();
+                    hiloControladorBarraProgreso.itsStop();
+                }
             } catch (BasicPlayerException ex) {
-                Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
-            }*/
+                Logger.getLogger(Controlador.class
+                        .getName()).log(Level.SEVERE, null, ex);
+            }
             audio = new Audio(cancion.getRuta());
         });
     }
@@ -222,11 +227,22 @@ public class Controlador {
         for (int i = 0; i < vistaTablaListado.getColumnCount(); i++) {
             vistaTablaListado.getColumnModel().getColumn(i).setCellRenderer(renderizador);
         }
+        TableColumnModel tcm = vistaTablaListado.getColumnModel();
+        tcm.removeColumn(tcm.getColumn(2));
         vistaTablaListado.changeSelection(0, 0, true, false);
 
+        try {
+            if (audio != null) {
+                audio.getPlayer().stop();
+                hiloControladorBarraProgreso.itsStop();
+                audio = null;
+            }
+        } catch (BasicPlayerException ex) {
+            Logger.getLogger(Controlador.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
         //Poner información
-            //String nombre = listaCanciones.get(0).get(0).toString();
-            //selecionarCancion(nombre);
+        selecionarCancion(vistaTablaListado.getSelectedRow());
     }
 
     private void introducirDatosLista(ListaReproduccion args) {
@@ -238,7 +254,10 @@ public class Controlador {
         vista.getTextoDescr().setEditable(true);
         vista.getTextoDescr().setText(args.getDescripcio());
         vista.getTextoDescr().setEditable(false);
-        vista.getImagenLabel().setIcon(new ImageIcon(args.getRutaImatge()));
+        String defectBG = "covers\\ShinyBG.png";
+        vista.getImagenLabel().setIcon(new ImageIcon(
+                (listaSeleccionadaAReporucir.equals(LISTAR_TODAS)
+                ? defectBG : args.getRutaImatge())));
         for (String cancion : args.getLista_audios()) {
             firstString = new ArrayList<>();
             for (AudioMP3 audio : listas.listaAudios) {
@@ -246,6 +265,7 @@ public class Controlador {
                     firstString.add(audio.getNom());
                     //String duracion = audio.getDurada() +"";
                     firstString.add(convertTiempoStr(audio.getDurada()));
+                    firstString.add(audio.getRuta());
                     listaCanciones.add(firstString);
                     System.out.println(audio.getAutor() + " nom " + audio.getNom());
                 }
@@ -253,8 +273,35 @@ public class Controlador {
         }
     }
 
-    public static void cancionTerminada() {
+    private class cancionTerminda extends Thread {
 
+        @Override
+        public void run() {
+            int filaMusica = vistaTablaListado.getSelectedRow();
+            /*
+            String cancionAhora = vistaTablaListado.getValueAt(filaMusica, 0).toString();
+            ArrayList cancionProgrmar = new ArrayList();
+            for (Iterator<ArrayList> iterator = listaCanciones.iterator(); iterator.hasNext() && cancionProgrmar.isEmpty();) {
+                for (Iterator iterator1 = iterator.next().iterator(); iterator1.hasNext() && cancionProgrmar.isEmpty();) {
+                    Object next = iterator1.next();
+                    if (next.equals(cancionAhora)) {
+                        cancionProgrmar = iterator.next();
+                    }
+                }
+            }*/
+            if (filaMusica < vistaTablaListado.getRowCount()) {//!cancionProgrmar.isEmpty()) {
+                //System.out.println("NoVacio " + cancionProgrmar.get(0).toString());
+                //System.out.println(vistaTablaListado.getValueAt(filaMusica + 1, 2).toString());
+                selecionarCancion(filaMusica + 1);//vistaTablaListado.getValueAt(filaMusica + 1, 2).toString());
+                vistaTablaListado.changeSelection(filaMusica + 1, 0, true, false);
+                try {
+                    audio.getPlayer().play(); //reproduim l'àudio
+                    hiloControladorBarraProgreso.itsPlay();
+                } catch (BasicPlayerException ex) {
+                    Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }
 
     class ControladorBotones implements ActionListener {
@@ -265,7 +312,7 @@ public class Controlador {
             //Declarem el gestor d'esdeveniments
             Object gestorEsdeveniments = esdeveniment.getSource();
             ArrayList<String> cancionesDentro = new ArrayList<>();
-
+            /*
             //Si quieres poder seleccionar una cancion y reproducirla, haz que sea un map.
             ArrayList<Audio> archivosAudio = new ArrayList<>();
             int i = 0;
@@ -293,7 +340,7 @@ public class Controlador {
                 }
 
             }
-            String duracionS = (String) vistaTablaListado.getValueAt(i, 1);
+            String duracionS = (String) vistaTablaListado.getValueAt(i, 1);*/
             //TODO ESTO CUANDO TERMINE EL AUDIO
             //tienes un contador i, si ese contador, no es mayor al lenght del array "archivosAudio"
             //Un array con todas las direcciones de los audios de la lista.

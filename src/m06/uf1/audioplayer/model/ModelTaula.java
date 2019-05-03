@@ -13,11 +13,12 @@ public class ModelTaula extends AbstractTableModel {
     private ArrayList<ArrayList> registros;
 
     public ModelTaula(ArrayList<ArrayList> dades) {
-        // A completar ...
         super();
+        // A completar ...
         nombreCampos = new ArrayList();
         nombreCampos.add("Nombre");
         nombreCampos.add("Minutos");
+        nombreCampos.add("ruta");
         registros = dades;
 
     }
@@ -41,7 +42,7 @@ public class ModelTaula extends AbstractTableModel {
     public String getColumnName(int column) {
         return nombreCampos.get(column);
     }
-    
+
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         return false;
