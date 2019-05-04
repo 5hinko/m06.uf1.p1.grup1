@@ -22,6 +22,7 @@ import org.w3c.dom.*;
 import java.io.*;
 import java.util.ArrayList;
 import static java.util.Collections.list;
+import javazoom.jlgui.basicplayer.BasicPlayer;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
 
 import m06.uf1.audioplayer.model.*;
@@ -38,8 +39,40 @@ public class Pruebas {
     static ArrayList<AudioMP3> listaAudios = new ArrayList<>();
     static ArrayList<ListaReproduccion> listaRepro = new ArrayList<>();
 
+    public static class barraMusica extends BasicPlayer implements Runnable{
+
+        BasicPlayer player;
+        
+        public barraMusica(String file) throws BasicPlayerException {
+            player = new BasicPlayer();
+            super.open(new File(file));
+        }
+
+        @Override
+        public void run() {
+            try {
+                super.play();
+            } catch (BasicPlayerException ex) {
+                Logger.getLogger(Pruebas.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+
+        public void itsPlay() throws BasicPlayerException{
+            super.play();
+            System.out.println("Play");
+        }
+    }
+    
     public static void main(String[] args) throws IOException, ParserConfigurationException, FileNotFoundException, ParseException, BasicPlayerException, InterruptedException {
 
+        barraMusica barra = new barraMusica("audios/September.mp3");
+        barra.run();
+       
+        Thread.sleep(3);
+        barra.play();
+        
+        /*
         Audio audio = new Audio("audios/September.mp3");
         audio.getPlayer().play();
 
@@ -74,7 +107,7 @@ public class Pruebas {
 
         System.out.println("- - - - -- -");
         Thread.sleep(800);
-        }while(true);
+        }while(true);*/
         /*
             try {
             

@@ -28,7 +28,6 @@ public class Controlador {
     private final String LISTAR_TODAS = "Totes les cançons ";
     private ArrayList<ArrayList> listaCanciones;
     private Vista vista;
-    private static Audio audio;
     private String listaSeleccionadaAReporucir = null;
 
     private JComboBox vistaCombBoxAlbum;
@@ -42,7 +41,6 @@ public class Controlador {
     public Controlador() {
         try {
             vista = new Vista();
-            audio = null;
 
             instanciaVariables();
 
@@ -63,7 +61,8 @@ public class Controlador {
         vistaTablaListado = vista.getjTablaMusica();
 
         listaSeleccionadaAReporucir = LISTAR_TODAS;
-        hiloControladorBarraProgreso = new BarraProgreso(vistaBarraProgreso, vista.getTextoTiempo(), new CancionTerminda());
+        hiloControladorBarraProgreso = new BarraProgreso(vistaBarraProgreso, vista.getTextoTiempo(), new CambiarCancionAUTO());
+        hiloControladorBarraProgreso.setAudioMusica(null);
     }
 
     public void afegirListenerBotons() {
@@ -131,15 +130,13 @@ public class Controlador {
                 int rowSelected = table.rowAtPoint(point);
                 if (mouseEvent.getClickCount() <= 2 && table.getSelectedRow() != -1) {
 
-
                     selecionarCancion(rowSelected);
 
                     if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
                         try {
                             // your valueChanged overridden method
 
-                            audio.getPlayer().play(); //reproduim l'àudio
-                            hiloControladorBarraProgreso.itsPlay();
+                            hiloControladorBarraProgreso.itsPlay();//reproduim l'àudio
                         } catch (BasicPlayerException ex) {
                             Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -150,69 +147,6 @@ public class Controlador {
         }
         );
 
-    }
-
-    private void selecionarCancion(int rowSelected) {
-        String nombre = (String) vistaTablaListado.getValueAt(rowSelected, 0).toString();
-        listas.listaAudios.stream().filter((cancion) -> (cancion.getNom().equals(nombre))).map((cancion) -> {
-            vista.getTextoTitulo().setText(cancion.getNom());
-            return cancion;
-        }).map((cancion) -> {
-            vista.getTextoAutor().setText(cancion.getAutor());
-            return cancion;
-        }).forEachOrdered((cancion) -> {
-            vista.getTextoMaxDuracion().setText(convertTiempoStr(cancion.getDurada()));
-            vistaBarraProgreso.setMaximum(cancion.getDurada());
-            try {
-                if (audio != null) {
-                    audio.getPlayer().stop();
-                    hiloControladorBarraProgreso.itsStop();
-                }
-            } catch (BasicPlayerException ex) {
-                Logger.getLogger(Controlador.class
-                        .getName()).log(Level.SEVERE, null, ex);
-            }
-            audio = new Audio(cancion.getRuta());
-
-        });
-    }
-
-    private String convertTiempoStr(int num) {
-        int min = num / 60;
-        int seg = num % 60;
-
-        return (convertDecimal(min) + ":" + convertDecimal(seg));
-    }
-
-    private String convertDecimal(int num) {
-        return ((num < 10) ? "0" + num : "" + num);
-    }
-
-    private void insertarDatosTablaMusica(ArrayList<ArrayList> listaCanciones) {
-        //Bonito Tabla
-        //vistaTablaListado.getSelectionModel().clearSelection();
-        vistaTablaListado.clearSelection();
-        vistaTablaListado.setModel(new ModelTaula(listaCanciones));
-        RenderizadorCeldas renderizador = new RenderizadorCeldas();
-        for (int i = 0; i < vistaTablaListado.getColumnCount(); i++) {
-            vistaTablaListado.getColumnModel().getColumn(i).setCellRenderer(renderizador);
-        }
-        TableColumnModel tcm = vistaTablaListado.getColumnModel();
-        tcm.removeColumn(tcm.getColumn(2));
-        vistaTablaListado.changeSelection(0, 0, true, false);
-
-        try {
-            if (audio != null) {
-                audio.getPlayer().stop();
-                hiloControladorBarraProgreso.itsStop();
-                audio = null;
-            }
-        } catch (BasicPlayerException ex) {
-            Logger.getLogger(Controlador.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
-        //Poner información
-        selecionarCancion(vistaTablaListado.getSelectedRow());
     }
 
     private void introducirDatosLista(ListaReproduccion args) {
@@ -244,18 +178,87 @@ public class Controlador {
         }
     }
 
-    private class CancionTerminda extends Thread {
+    private void insertarDatosTablaMusica(ArrayList<ArrayList> listaCanciones) {
+        //Bonito Tabla
+        //vistaTablaListado.getSelectionModel().clearSelection();
+        vistaTablaListado.clearSelection();
+        vistaTablaListado.setModel(new ModelTaula(listaCanciones));
+        RenderizadorCeldas renderizador = new RenderizadorCeldas();
+        for (int i = 0; i < vistaTablaListado.getColumnCount(); i++) {
+            vistaTablaListado.getColumnModel().getColumn(i).setCellRenderer(renderizador);
+        }
+        TableColumnModel tcm = vistaTablaListado.getColumnModel();
+        tcm.removeColumn(tcm.getColumn(2));
+        vistaTablaListado.changeSelection(0, 0, true, false);
+
+        try {
+            if (hiloControladorBarraProgreso.getAudioMusica() != null) {
+                hiloControladorBarraProgreso.itsStop();
+                hiloControladorBarraProgreso.setAudioMusica(null);
+            }
+        } catch (BasicPlayerException ex) {
+            Logger.getLogger(Controlador.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+        //Poner información
+        selecionarCancion(vistaTablaListado.getSelectedRow());
+    }
+
+    private void selecionarCancion(int rowSelected) {
+        String nombre = (String) vistaTablaListado.getValueAt(rowSelected, 0).toString();
+        listas.listaAudios.stream().filter((cancion) -> (cancion.getNom().equals(nombre))).map((cancion) -> {
+            vista.getTextoTitulo().setText(cancion.getNom());
+            return cancion;
+        }).map((cancion) -> {
+            vista.getTextoAutor().setText(cancion.getAutor());
+            return cancion;
+        }).forEachOrdered((cancion) -> {
+            vista.getTextoMaxDuracion().setText(convertTiempoStr(cancion.getDurada()));
+            vistaBarraProgreso.setMaximum(cancion.getDurada());
+            try {
+                if (hiloControladorBarraProgreso.getAudioMusica() != null) {
+                    hiloControladorBarraProgreso.itsStop();
+                }
+            } catch (BasicPlayerException ex) {
+                Logger.getLogger(Controlador.class
+                        .getName()).log(Level.SEVERE, null, ex);
+            }
+            hiloControladorBarraProgreso.setAudioMusica(new Audio(cancion.getRuta()));
+
+        });
+    }
+
+    private String convertTiempoStr(int num) {
+        int min = num / 60;
+        int seg = num % 60;
+
+        return (convertDecimal(min) + ":" + convertDecimal(seg));
+    }
+
+    private String convertDecimal(int num) {
+        return ((num < 10) ? "0" + num : "" + num);
+    }
+
+    class CambiarCancionAUTO extends Thread {
+
+        private int filaMusica = -100;
+
+        public CambiarCancionAUTO() {
+        }
+
+        public CambiarCancionAUTO(int fila) {
+            this.filaMusica = fila;
+        }
 
         @Override
         public void run() {
-            int filaMusica = vistaTablaListado.getSelectedRow();
-  
+
+            filaMusica = (filaMusica != -100) ? filaMusica : vistaTablaListado.getSelectedRow() + 1;
             if (filaMusica < vistaTablaListado.getRowCount()) {//!cancionProgrmar.isEmpty()) {
 
-                selecionarCancion(filaMusica + 1);//vistaTablaListado.getValueAt(filaMusica + 1, 2).toString());
-                vistaTablaListado.changeSelection(filaMusica + 1, 0, true, false);
+                selecionarCancion(filaMusica);//vistaTablaListado.getValueAt(filaMusica + 1, 2).toString());
+                vistaTablaListado.changeSelection(filaMusica, 0, true, false);
                 try {
-                    audio.getPlayer().play(); //reproduim l'àudio
                     hiloControladorBarraProgreso.itsPlay();
                 } catch (BasicPlayerException ex) {
                     Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
@@ -274,25 +277,24 @@ public class Controlador {
 
             try {
                 if (gestorEsdeveniments.equals(vista.getPlay())) { //Si hem pitjat el boto play
-                    selecionarCancion(vistaTablaListado.getSelectedRow());
-                    audio.getPlayer().play(); //reproduim l'àudio
+                    selecionarCancion(vistaTablaListado.getSelectedRow()); //reproduim l'àudio
                     hiloControladorBarraProgreso.itsPlay();
                 } else if (gestorEsdeveniments.equals(vista.getStop())) {
                     //Si hem pitjat el boto stop
-                    audio.getPlayer().stop(); //parem la reproducció de l'àudio
+                    //parem la reproducció de l'àudio
                     hiloControladorBarraProgreso.itsStop();
                 } else if (gestorEsdeveniments.equals(vista.getPausa())) {
                     //Si hem pitjat el boto stop
-                    audio.getPlayer().pause(); //pausem la reproducció de l'àudio
+                    //pausem la reproducció de l'àudio
                     hiloControladorBarraProgreso.itsPause();
                 } else if (gestorEsdeveniments.equals(vista.getContinuar())) {
                     //Si hem pitjat el boto stop
-                    audio.getPlayer().resume(); //continuem la reproducció de l'àudio
+                    //continuem la reproducció de l'àudio
                     hiloControladorBarraProgreso.itsContinuar();
                 } else if (gestorEsdeveniments.equals(vista.getAnterior())) {
                     int actual = vistaTablaListado.getSelectedRow();
                     if (actual != 0) {
-                        getAnteriorCancion();
+                        new CambiarCancionAUTO(actual - 1).start();
                     } else {
                         System.out.println("Se ha llegado al inicio");
                     }
@@ -300,7 +302,7 @@ public class Controlador {
 
                     int actual = vistaTablaListado.getSelectedRow();
                     if (actual != vistaTablaListado.getRowCount() - 1) {
-                        new CancionTerminda().start();
+                        new CambiarCancionAUTO(actual + 1).start();
                     } else {
                         System.out.println("Se ha llegado al maximo");
                     }
@@ -313,17 +315,4 @@ public class Controlador {
 
         }
     }
-
-    public void getAnteriorCancion() {
-        int actual = vistaTablaListado.getSelectedRow();
-        vistaTablaListado.changeSelection(actual - 1, 0, false, true);
-        selecionarCancion(actual - 1);
-        try {
-            audio.getPlayer().play(); //reproduim l'àudio
-            hiloControladorBarraProgreso.itsPlay();
-        } catch (BasicPlayerException ex) {
-            Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
 }

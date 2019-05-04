@@ -20,6 +20,7 @@ import javazoom.jlgui.basicplayer.BasicPlayerException;
  */
 public class BarraProgreso extends Thread {
 
+    private Audio audioMusica;
     private JScrollBar barraProgreso;
     private JLabel textoProgreso;
     private int numBucleProgress = 0;
@@ -116,6 +117,9 @@ public class BarraProgreso extends Thread {
             Logger.getLogger(BarraProgreso.class.getName()).log(Level.SEVERE, null, ex);
         }
         todosMismoVariable(false);
+        controlladorGUI(0);
+        audioMusica.getPlayer().play();
+
         start = true;
     }
 
@@ -124,12 +128,13 @@ public class BarraProgreso extends Thread {
         stop = true;
         itsContinuar();
 
-        numBucleProgress = 0;
+        audioMusica.getPlayer().stop();
         controlladorGUI(0);
     }
 
-    public void itsPause() {
+    public void itsPause() throws BasicPlayerException {
         pause = true;
+        audioMusica.getPlayer().pause();
     }
 
     public void itsContinuar() throws BasicPlayerException {
@@ -137,11 +142,20 @@ public class BarraProgreso extends Thread {
         synchronized ((Object) barraProgreso) {
             barraProgreso.notify();
         }
+        audioMusica.getPlayer().resume();
     }
 
     public void posicionBarra(int num) {
         numBucleProgress = num;
         controlladorGUI(num);
+    }
+
+    public Audio getAudioMusica() {
+        return audioMusica;
+    }
+
+    public void setAudioMusica(Audio audioMusica) {
+        this.audioMusica = audioMusica;
     }
 
 }
