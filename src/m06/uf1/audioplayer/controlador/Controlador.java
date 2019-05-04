@@ -253,7 +253,7 @@ public class Controlador {
         @Override
         public void run() {
 
-            filaMusica = (filaMusica != -100) ? filaMusica : vistaTablaListado.getSelectedRow() + 1;
+            if(filaMusica == -100) filaMusica = (vistaTablaListado.getSelectedRow() + 1);
             if (filaMusica < vistaTablaListado.getRowCount()) {//!cancionProgrmar.isEmpty()) {
 
                 selecionarCancion(filaMusica);//vistaTablaListado.getValueAt(filaMusica + 1, 2).toString());
@@ -263,6 +263,8 @@ public class Controlador {
                 } catch (BasicPlayerException ex) {
                     Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
                 }
+            }else{
+                System.out.println("Lista Terminada");
             }
         }
     }

@@ -48,7 +48,7 @@ public class BarraProgreso extends Thread {
             }
             //Start
             while (start) {
-                int progresoNum = barraProgreso.getValue();
+                int progresoNum =  barraProgreso.getValue();
                 int limitProgreso = barraProgreso.getMaximum();
                 for (numBucleProgress = progresoNum; numBucleProgress <= limitProgreso && !stop; numBucleProgress++) {
 
@@ -90,6 +90,7 @@ public class BarraProgreso extends Thread {
     }
 
     private void controlladorGUI(int progresoNum) {
+        numBucleProgress = progresoNum;
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -104,30 +105,31 @@ public class BarraProgreso extends Thread {
     }
 
     public void todosMismoVariable(boolean active) {
-        start = active;
-        pause = active;
         stop = active;
+        pause = active;
+        start = active;
     }
 
     public void itsPlay() throws BasicPlayerException {
         itsStop();
         try {
-            Thread.sleep(3);
+            Thread.sleep(5);
         } catch (InterruptedException ex) {
             Logger.getLogger(BarraProgreso.class.getName()).log(Level.SEVERE, null, ex);
         }
         todosMismoVariable(false);
         controlladorGUI(0);
-        audioMusica.getPlayer().play();
-
         start = true;
+        audioMusica.getPlayer().play();
     }
 
     public void itsStop() throws BasicPlayerException {
-        start = false;
         stop = true;
-        itsContinuar();
-
+        pause = false;
+        start = false;
+        synchronized ((Object) barraProgreso) {
+            barraProgreso.notify();
+        }
         audioMusica.getPlayer().stop();
         controlladorGUI(0);
     }
@@ -143,11 +145,6 @@ public class BarraProgreso extends Thread {
             barraProgreso.notify();
         }
         audioMusica.getPlayer().resume();
-    }
-
-    public void posicionBarra(int num) {
-        numBucleProgress = num;
-        controlladorGUI(num);
     }
 
     public Audio getAudioMusica() {
