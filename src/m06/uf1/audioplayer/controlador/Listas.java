@@ -90,7 +90,6 @@ public class Listas {
             ListaReproduccion listarepro = new ListaReproduccion(nom, descripcio, ruta_imatge, lista_canciones);
             listaRepro.add(listarepro);
 
-            //ListaReproduccion listarepro = new ListaReproduccion(nom, ruta_lista);
         }
     }
 

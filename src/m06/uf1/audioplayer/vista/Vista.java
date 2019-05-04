@@ -45,7 +45,7 @@ public class Vista {
 
     public Vista() {
 
-        finestra = new JFrame("Reproductor Àudio");
+        finestra = new JFrame("Reproductor Àudi");
 
         jPrincipal = new JPanel(new GridBagLayout());
         GridBagConstraints constraint = new GridBagConstraints();
@@ -61,17 +61,8 @@ public class Vista {
 
         jBoxAlbum.addItem("Todo");
         jBoxAlbum.addItem("Album 1");
-        jBoxAlbum.addItem("Album 2");/*
-        jTablaMusica.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{
-                    {"Musica 1", null},
-                    {"Musica 2", null},
-                    {"Musica 3", null}
-                },
-                new String[]{
-                    "Nombre Musica", "Por Ahora nada"
-                }
-        ));*/
+        jBoxAlbum.addItem("Album 2");
+
         ArrayList<ArrayList> listaCanciones = new ArrayList<>();
         ArrayList<String> firstString = new ArrayList<>();
         firstString.add("Musica 1");
@@ -115,21 +106,20 @@ public class Vista {
         columnaMusica.setLayout(new BorderLayout());
         columnaMusica.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        textoAlbumTitulo = new JLabel("Nombre Llista");
-        textoTitulo = new JLabel("Titulo Canción");
+        textoAlbumTitulo = new JLabel("Totes les cançons");
+        textoTitulo = new JLabel("Títul Cançó");
         imagenLabel = new JLabel();
         int width = 200, height = 200;
         imagenLabel.setMinimumSize(new Dimension(width, height));
         imagenLabel.setMaximumSize(new Dimension(width, height));
         imagenLabel.setPreferredSize(new Dimension(width, height));
-        //imagenLabel.setIcon(new ImageIcon("covers\\AM_Cover.png"));
         imagenLabel.setBackground(Color.red);
         imagenLabel.setBorder(BorderFactory.createTitledBorder(""));
         imagenLabel.setIcon(new ImageIcon("covers\\ShinyBG.png"));
         textoAutor = new JLabel("Yo mismo");
         textoDescr = new JTextArea("Pues es muy bonito", 2, 33);
         textoDescr.setEditable(false);
-        textoDescr.setBorder(BorderFactory.createTitledBorder("Descripción"));
+        textoDescr.setBorder(BorderFactory.createTitledBorder("Descripció"));
 
         jBarraProgreso = new JScrollBar();
         jBarraProgreso.setOrientation(JScrollBar.HORIZONTAL);
@@ -171,16 +161,7 @@ public class Vista {
         panelExpress.add(textoMaxDuracion);
         menuControl2.add(panelExpress, BorderLayout.EAST);
         menuControl.add(menuControl2, BorderLayout.SOUTH);
-        /*
-        
-        menuControl.setLayout(new BoxLayout(menuControl, BoxLayout.PAGE_AXIS));
-        menuControl.add(imagenLabel);
-        
-        menuControl.add(textoAutor);
-        menuControl.add(textoDescr);
-        
-        menuControl.add(jBarraProgreso);
-        menuControl.add(textoDuracion);*/
+
 
         columnaMusica.add(menuControl, BorderLayout.CENTER);
 
@@ -200,7 +181,7 @@ public class Vista {
         menuControl.add(continuar);
         menuControl.add(stop);
         menuControl.add(siguiente);
-        anterior.setEnabled(false);
+        //anterior.setEnabled(false);
 
         columnaMusica.add(menuControl, BorderLayout.SOUTH);
 

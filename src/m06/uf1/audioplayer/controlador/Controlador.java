@@ -25,7 +25,7 @@ import m06.uf1.audioplayer.model.*;
 
 public class Controlador {
 
-    private final String LISTAR_TODAS = "Todas las listas";
+    private final String LISTAR_TODAS = "Totes les cançons ";
     private ArrayList<ArrayList> listaCanciones;
     private Vista vista;
     private static Audio audio;
@@ -96,7 +96,7 @@ public class Controlador {
         //barra progreso
         vistaBarraProgreso.setValue(0);
 
-        //Hilo itento de hacer la barra de progreso
+        //Hilo de hacer la barra de progreso
         hiloControladorBarraProgreso.start();
     }
 
@@ -123,28 +123,6 @@ public class Controlador {
             insertarDatosTablaMusica(listaCanciones);
         });
 
-        //https://stackoverflow.com/questions/14852719/double-click-listener-on-jtable-in-java
-        /*vistaTablaListado.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (vistaTablaListado.getRowCount() > 0) {
-                    String nombre = (String)vistaTablaListado.getValueAt(vistaTablaListado.getSelectedRow(), 0).toString();
-                    listas.listaAudios.stream().filter((cancion) -> (cancion.getNom().equals(nombre))).map((cancion) -> {
-                        vista.getTextoTitulo().setText(cancion.getNom());
-                        return cancion;
-                    }).map((cancion) -> {
-                        vista.getTextoAutor().setText(cancion.getAutor());
-                        return cancion;
-                    }).forEachOrdered((cancion) -> {
-                        vista.getTextoMaxDuracion().setText(convertTiempoStr(cancion.getDurada()));
-                        vista.getjBarraProgreso().setMaximum(cancion.getDurada());
-                    });
-                } else {
-                    //Possiblemente vació
-                }
-                System.out.println("2 veces" + e.getFirstIndex() + " " + vistaTablaListado.getSelectedRow());
-            }
-        });*/
         vistaTablaListado.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent mouseEvent) {
@@ -152,7 +130,7 @@ public class Controlador {
                 Point point = mouseEvent.getPoint();
                 int rowSelected = table.rowAtPoint(point);
                 if (mouseEvent.getClickCount() <= 2 && table.getSelectedRow() != -1) {
-                    // your valueChanged overridden method 
+
 
                     selecionarCancion(rowSelected);
 
@@ -172,17 +150,6 @@ public class Controlador {
         }
         );
 
-        /*
-        vistaBarraProgreso.addAdjustmentListener((AdjustmentEvent e) -> {
-
-            try {
-                audio.getPlayer().seek(0);
-            } catch (BasicPlayerException ex) {
-                Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            vistaBarraProgreso.setValue(e.getValue());
-        });
-         */
     }
 
     private void selecionarCancion(int rowSelected) {
@@ -206,10 +173,7 @@ public class Controlador {
                         .getName()).log(Level.SEVERE, null, ex);
             }
             audio = new Audio(cancion.getRuta());
-            vista.getAnterior().setEnabled(
-                    (vistaTablaListado.getSelectedRow() != 0));
-            vista.getSiguiente().setEnabled(
-                    (vistaTablaListado.getSelectedRow() != vistaTablaListado.getRowCount() - 1));
+
         });
     }
 
@@ -260,7 +224,7 @@ public class Controlador {
         vista.getTextoDescr().setEditable(true);
         vista.getTextoDescr().setText(
                 (listaSeleccionadaAReporucir.equals(LISTAR_TODAS)
-                ? "Llistado de todas las canciones" : args.getDescripcio()));
+                ? "Llistat amb totes les cançons" : args.getDescripcio()));
         vista.getTextoDescr().setEditable(false);
         vista.getImagenLabel().setIcon(new ImageIcon(
                 (listaSeleccionadaAReporucir.equals(LISTAR_TODAS)
@@ -285,20 +249,9 @@ public class Controlador {
         @Override
         public void run() {
             int filaMusica = vistaTablaListado.getSelectedRow();
-            /*
-            String cancionAhora = vistaTablaListado.getValueAt(filaMusica, 0).toString();
-            ArrayList cancionProgrmar = new ArrayList();
-            for (Iterator<ArrayList> iterator = listaCanciones.iterator(); iterator.hasNext() && cancionProgrmar.isEmpty();) {
-                for (Iterator iterator1 = iterator.next().iterator(); iterator1.hasNext() && cancionProgrmar.isEmpty();) {
-                    Object next = iterator1.next();
-                    if (next.equals(cancionAhora)) {
-                        cancionProgrmar = iterator.next();
-                    }
-                }
-            }*/
+  
             if (filaMusica < vistaTablaListado.getRowCount()) {//!cancionProgrmar.isEmpty()) {
-                //System.out.println("NoVacio " + cancionProgrmar.get(0).toString());
-                //System.out.println(vistaTablaListado.getValueAt(filaMusica + 1, 2).toString());
+
                 selecionarCancion(filaMusica + 1);//vistaTablaListado.getValueAt(filaMusica + 1, 2).toString());
                 vistaTablaListado.changeSelection(filaMusica + 1, 0, true, false);
                 try {
@@ -307,8 +260,6 @@ public class Controlador {
                 } catch (BasicPlayerException ex) {
                     Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } else {
-                vista.getSiguiente().setEnabled(false);
             }
         }
     }
@@ -320,22 +271,7 @@ public class Controlador {
         public void actionPerformed(ActionEvent esdeveniment) {
             //Declarem el gestor d'esdeveniments
             Object gestorEsdeveniments = esdeveniment.getSource();
-            /*
-            ArrayList<String> cancionesDentro = new ArrayList<>();
-            //Si quieres poder seleccionar una cancion y reproducirla, haz que sea un map.
-            ArrayList<Audio> archivosAudio = new ArrayList<>();
-            int i = 0;
 
-            if (listaSeleccionadaAReporucir != null) {
-                for (ListaReproduccion listaSeleccionada : listas.listaRepro) {
-                    if (listaSeleccionada.getNom().equals(listaSeleccionadaAReporucir)) {
-                        for (String direccion : listaSeleccionada.getLista_audios()) {
-                            archivosAudio.add(new Audio("audios\\" + direccion + ".mp3"));
-                        }
-                    }
-                }
-            }
-             */
             try {
                 if (gestorEsdeveniments.equals(vista.getPlay())) { //Si hem pitjat el boto play
                     selecionarCancion(vistaTablaListado.getSelectedRow());
@@ -354,13 +290,21 @@ public class Controlador {
                     audio.getPlayer().resume(); //continuem la reproducció de l'àudio
                     hiloControladorBarraProgreso.itsContinuar();
                 } else if (gestorEsdeveniments.equals(vista.getAnterior())) {
-                    selecionarCancion(vistaTablaListado.getSelectedRow());
-                    getAnteriorCancion();
-
+                    int actual = vistaTablaListado.getSelectedRow();
+                    if (actual != 0) {
+                        getAnteriorCancion();
+                    } else {
+                        System.out.println("Se ha llegado al inicio");
+                    }
                 } else if (gestorEsdeveniments.equals(vista.getSiguiente())) {
 
-                    selecionarCancion(vistaTablaListado.getSelectedRow());
-                    new CancionTerminda().start();
+                    int actual = vistaTablaListado.getSelectedRow();
+                    if (actual != vistaTablaListado.getRowCount() - 1) {
+                        new CancionTerminda().start();
+                    } else {
+                        System.out.println("Se ha llegado al maximo");
+                    }
+
                 }
             } catch (BasicPlayerException e) {
                 vistaTablaListado.changeSelection(0, 0, false, true);
@@ -370,30 +314,6 @@ public class Controlador {
         }
     }
 
-    /*
-    public void cargarTodas() {
-
-        listaCanciones = new ArrayList<>();
-        ArrayList<String> firstString;
-        vista.getTextoAlbumTitulo().setText("Todas las canciones");
-
-        // ListaReproduccion listaSeleccionada = new ListaReproduccion();
-        //for (ListaReproduccion args : listas.listaRepro) {
-        //Algo feo pero funciona
-        vista.getTextoDescr().setEditable(true);
-        vista.getTextoDescr().setText("Todas las canciones disponibles");
-        vista.getTextoDescr().setEditable(false);
-        vista.getImagenLabel().setIcon(new ImageIcon("covers\\musica.png"));
-
-        for (AudioMP3 audio : listas.listaAudios) {
-            firstString = new ArrayList<>();
-            firstString.add(audio.getNom());
-            firstString.add(convertTiempoStr(audio.getDurada()));
-            listaCanciones.add(firstString);
-            System.out.println(audio.getAutor() + " nom " + audio.getNom());
-        }
-    }
-     */
     public void getAnteriorCancion() {
         int actual = vistaTablaListado.getSelectedRow();
         vistaTablaListado.changeSelection(actual - 1, 0, false, true);

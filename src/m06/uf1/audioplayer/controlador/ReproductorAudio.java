@@ -9,7 +9,6 @@ package m06.uf1.audioplayer.controlador;
  *
  * @author Juan
  */
-import m06.uf1.audioplayer.controlador.Controlador;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
