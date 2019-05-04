@@ -63,7 +63,7 @@ public class Controlador {
         vistaTablaListado = vista.getjTablaMusica();
 
         listaSeleccionadaAReporucir = LISTAR_TODAS;
-        hiloControladorBarraProgreso = new BarraProgreso(vistaBarraProgreso, vista.getTextoTiempo(), new cancionTerminda());
+        hiloControladorBarraProgreso = new BarraProgreso(vistaBarraProgreso, vista.getTextoTiempo(), new CancionTerminda());
     }
 
     public void afegirListenerBotons() {
@@ -71,6 +71,8 @@ public class Controlador {
         vista.getStop().addActionListener(new ControladorBotones());
         vista.getPausa().addActionListener(new ControladorBotones());
         vista.getContinuar().addActionListener(new ControladorBotones());
+        vista.getAnterior().addActionListener(new ControladorBotones());
+        vista.getSiguiente().addActionListener(new ControladorBotones());
     }
 
     public void afegirDades() throws ParserConfigurationException, SAXException, IOException, FileNotFoundException, ParseException {
@@ -204,6 +206,10 @@ public class Controlador {
                         .getName()).log(Level.SEVERE, null, ex);
             }
             audio = new Audio(cancion.getRuta());
+            vista.getAnterior().setEnabled(
+                    (vistaTablaListado.getSelectedRow() != 0));
+            vista.getSiguiente().setEnabled(
+                    (vistaTablaListado.getSelectedRow() != vistaTablaListado.getRowCount() - 1));
         });
     }
 
@@ -274,7 +280,7 @@ public class Controlador {
         }
     }
 
-    private class cancionTerminda extends Thread {
+    private class CancionTerminda extends Thread {
 
         @Override
         public void run() {
@@ -301,6 +307,8 @@ public class Controlador {
                 } catch (BasicPlayerException ex) {
                     Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
                 }
+            } else {
+                vista.getSiguiente().setEnabled(false);
             }
         }
     }
@@ -327,31 +335,10 @@ public class Controlador {
                     }
                 }
             }
-
-            //foreach para ir pillando los audios y meterlos en un array
-            // ArrayList<AudioMP3> arrayAudios = new
-            if (audio == null) {
-                String nombre = vistaTablaListado.getValueAt(vistaTablaListado.getSelectedRow(), 0).toString();
-                System.out.println("Nombre : " + nombre);
-                for (AudioMP3 rutaMP3 : listas.listaAudios) {
-                    if (rutaMP3.getNom().equals(nombre)) {
-                        audio = new Audio(rutaMP3.getRuta());
-                        i = 0;
-                    }
-                }
-
-            }
-            String duracionS = (String) vistaTablaListado.getValueAt(i, 1);*/
-            //TODO ESTO CUANDO TERMINE EL AUDIO
-            //tienes un contador i, si ese contador, no es mayor al lenght del array "archivosAudio"
-            //Un array con todas las direcciones de los audios de la lista.
-            //haces audio = new Audio(archivosaudios.get(i)); -- o algo asi, eso cojera el siguiente archivo.
-            //y selecicionas el siguiente elemento de la columna tmb vistaTal.changeSelection(i,0,fadlse,true);
-            //Si es igual o mayo(igual) haces lo mismo pero selecionando el elemento 0.
-
-            //audio = archivosAudio.get(1);
+             */
             try {
                 if (gestorEsdeveniments.equals(vista.getPlay())) { //Si hem pitjat el boto play
+                    selecionarCancion(vistaTablaListado.getSelectedRow());
                     audio.getPlayer().play(); //reproduim l'àudio
                     hiloControladorBarraProgreso.itsPlay();
                 } else if (gestorEsdeveniments.equals(vista.getStop())) {
@@ -366,11 +353,56 @@ public class Controlador {
                     //Si hem pitjat el boto stop
                     audio.getPlayer().resume(); //continuem la reproducció de l'àudio
                     hiloControladorBarraProgreso.itsContinuar();
+                } else if (gestorEsdeveniments.equals(vista.getAnterior())) {
+                    selecionarCancion(vistaTablaListado.getSelectedRow());
+                    getAnteriorCancion();
+
+                } else if (gestorEsdeveniments.equals(vista.getSiguiente())) {
+
+                    selecionarCancion(vistaTablaListado.getSelectedRow());
+                    new CancionTerminda().start();
                 }
             } catch (BasicPlayerException e) {
                 vistaTablaListado.changeSelection(0, 0, false, true);
+                vista.getAnterior().setEnabled(false);
             }
 
+        }
+    }
+
+    /*
+    public void cargarTodas() {
+
+        listaCanciones = new ArrayList<>();
+        ArrayList<String> firstString;
+        vista.getTextoAlbumTitulo().setText("Todas las canciones");
+
+        // ListaReproduccion listaSeleccionada = new ListaReproduccion();
+        //for (ListaReproduccion args : listas.listaRepro) {
+        //Algo feo pero funciona
+        vista.getTextoDescr().setEditable(true);
+        vista.getTextoDescr().setText("Todas las canciones disponibles");
+        vista.getTextoDescr().setEditable(false);
+        vista.getImagenLabel().setIcon(new ImageIcon("covers\\musica.png"));
+
+        for (AudioMP3 audio : listas.listaAudios) {
+            firstString = new ArrayList<>();
+            firstString.add(audio.getNom());
+            firstString.add(convertTiempoStr(audio.getDurada()));
+            listaCanciones.add(firstString);
+            System.out.println(audio.getAutor() + " nom " + audio.getNom());
+        }
+    }
+     */
+    public void getAnteriorCancion() {
+        int actual = vistaTablaListado.getSelectedRow();
+        vistaTablaListado.changeSelection(actual - 1, 0, false, true);
+        selecionarCancion(actual - 1);
+        try {
+            audio.getPlayer().play(); //reproduim l'àudio
+            hiloControladorBarraProgreso.itsPlay();
+        } catch (BasicPlayerException ex) {
+            Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

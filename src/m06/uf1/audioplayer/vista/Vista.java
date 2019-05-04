@@ -40,6 +40,8 @@ public class Vista {
     private JButton stop;
     private JButton pausa;
     private JButton continuar;
+    private JButton anterior;
+    private JButton siguiente;
 
     public Vista() {
 
@@ -184,16 +186,21 @@ public class Vista {
 
         //Abajo Control Layout
         menuControl = new JPanel();
-        menuControl.setLayout(new GridLayout(0, 4));
+        menuControl.setLayout(new GridLayout(0, 6));
         menuControl.setBorder(BorderFactory.createEmptyBorder(10, 5, 0, 5));
         play = new JButton("Play");
         stop = new JButton("Stop");
         pausa = new JButton("Pause");
         continuar = new JButton("Continue");
+        anterior = new JButton("Anterior");
+        siguiente = new JButton("Siguiente");
+        menuControl.add(anterior);
         menuControl.add(play);
         menuControl.add(pausa);
         menuControl.add(continuar);
         menuControl.add(stop);
+        menuControl.add(siguiente);
+        anterior.setEnabled(false);
 
         columnaMusica.add(menuControl, BorderLayout.SOUTH);
 
@@ -309,4 +316,13 @@ public class Vista {
     public JLabel getTextoMaxDuracion() {
         return textoMaxDuracion;
     }
+
+    public JButton getAnterior() {
+        return anterior;
+}
+
+    public JButton getSiguiente() {
+        return siguiente;
+    }
+    
 }
