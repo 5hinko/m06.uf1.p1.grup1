@@ -294,6 +294,7 @@ public class Controlador {
                 } else if (gestorEsdeveniments.equals(vista.getAnterior())) {
                     int actual = vistaTablaListado.getSelectedRow();
                     if (actual != 0) {
+                        hiloControladorBarraProgreso.itsStop();
                         new CambiarCancionAUTO(actual - 1).start();
                     } else {
                         System.out.println("Se ha llegado al inicio");
@@ -302,6 +303,7 @@ public class Controlador {
 
                     int actual = vistaTablaListado.getSelectedRow();
                     if (actual != vistaTablaListado.getRowCount() - 1) {
+                        hiloControladorBarraProgreso.itsStop();
                         new CambiarCancionAUTO(actual + 1).start();
                     } else {
                         System.out.println("Se ha llegado al maximo");
