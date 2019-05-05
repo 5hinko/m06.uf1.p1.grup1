@@ -1,5 +1,6 @@
 package m06.uf1.audioplayer.controlador;
 
+import java.awt.Image;
 import java.awt.Point;
 import m06.uf1.audioplayer.model.Audio;
 import m06.uf1.audioplayer.vista.Vista;
@@ -8,11 +9,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import javax.xml.parsers.ParserConfigurationException;
@@ -25,7 +28,13 @@ import m06.uf1.audioplayer.model.*;
 
 public class Controlador {
 
+    enum Modo_reproducir {
+        SHUFFLE,
+        BUCLE
+    }
+
     private final String LISTAR_TODAS = "Totes les cançons ";
+    private Modo_reproducir MODO_REPRODUCIR;
     private ArrayList<ArrayList> listaCanciones;
     private Vista vista;
     private String listaSeleccionadaAReporucir = null;
@@ -61,6 +70,7 @@ public class Controlador {
         vistaTablaListado = vista.getjTablaMusica();
 
         listaSeleccionadaAReporucir = LISTAR_TODAS;
+        MODO_REPRODUCIR = Modo_reproducir.BUCLE;
         hiloControladorBarraProgreso = new BarraProgreso(vistaBarraProgreso, vista.getTextoTiempo());
         hiloControladorBarraProgreso.setAudioMusica(null);
         hiloControladorBarraProgreso.setThreadSiguiente(new CambiarCancionAUTO());
@@ -70,7 +80,7 @@ public class Controlador {
         vista.getPlay().addActionListener(new ControladorBotones());
         vista.getStop().addActionListener(new ControladorBotones());
         vista.getPausa().addActionListener(new ControladorBotones());
-        vista.getContinuar().addActionListener(new ControladorBotones());
+        vista.getReproducir().addActionListener(new ControladorBotones());
         vista.getAnterior().addActionListener(new ControladorBotones());
         vista.getSiguiente().addActionListener(new ControladorBotones());
     }
@@ -257,73 +267,99 @@ public class Controlador {
         @Override
         public void run() {
 
-            if (filaMusica < 0) {
-                filaMusica = (vistaTablaListado.getSelectedRow() + 1);
-            }
-            if (filaMusica < vistaTablaListado.getRowCount()) {//!cancionProgrmar.isEmpty()) {
-
-                selecionarCancion(filaMusica);//vistaTablaListado.getValueAt(filaMusica + 1, 2).toString());
-                vistaTablaListado.changeSelection(filaMusica, 0, true, false);
-                try {
-                    hiloControladorBarraProgreso.itsPlay();
-                    hiloControladorBarraProgreso.setThreadSiguiente(new CambiarCancionAUTO());
-                } catch (BasicPlayerException ex) {
-                    Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+            if (MODO_REPRODUCIR.equals(Modo_reproducir.BUCLE)) {
+                if (filaMusica < 0) {
+                    filaMusica = (vistaTablaListado.getSelectedRow() + 1);
+                }
+                if (filaMusica >= vistaTablaListado.getRowCount()) {//!cancionProgrmar.isEmpty()) {
+                    System.out.println("Lista Terminada");
+                    filaMusica = 0;
                 }
             } else {
-                System.out.println("Lista Terminada");
+                int priNum = vistaTablaListado.getSelectedRow();
+                do {
+                    filaMusica = (int) (Math.random() * (vistaTablaListado.getRowCount()));
+                } while (priNum == filaMusica);
+            }
+
+            selecionarCancion(filaMusica);//vistaTablaListado.getValueAt(filaMusica + 1, 2).toString());
+            vistaTablaListado.changeSelection(filaMusica, 0, true, false);
+            try {
+                hiloControladorBarraProgreso.itsPlay();
+                hiloControladorBarraProgreso.setThreadSiguiente(new CambiarCancionAUTO());
+            } catch (BasicPlayerException ex) {
+                Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
 
-        class ControladorBotones implements ActionListener {
+    class ControladorBotones implements ActionListener {
 
-            //Dotem de funcionalitat als botons
-            @Override
-            public void actionPerformed(ActionEvent esdeveniment) {
-                //Declarem el gestor d'esdeveniments
-                Object gestorEsdeveniments = esdeveniment.getSource();
+        //Dotem de funcionalitat als botons
+        @Override
+        public void actionPerformed(ActionEvent esdeveniment) {
+            //Declarem el gestor d'esdeveniments
+            Object gestorEsdeveniments = esdeveniment.getSource();
 
-                try {
-                    if (gestorEsdeveniments.equals(vista.getPlay())) { //Si hem pitjat el boto play
+            try {
+                if (gestorEsdeveniments.equals(vista.getPlay())) { //Si hem pitjat el boto play
+                    if (vistaBarraProgreso.getValue() < 2) {
                         selecionarCancion(vistaTablaListado.getSelectedRow()); //reproduim l'àudio
                         hiloControladorBarraProgreso.itsPlay();
-                    } else if (gestorEsdeveniments.equals(vista.getStop())) {
-                        //Si hem pitjat el boto stop
-                        //parem la reproducció de l'àudio
-                        hiloControladorBarraProgreso.itsStop();
-                    } else if (gestorEsdeveniments.equals(vista.getPausa())) {
-                        //Si hem pitjat el boto stop
-                        //pausem la reproducció de l'àudio
-                        hiloControladorBarraProgreso.itsPause();
-                    } else if (gestorEsdeveniments.equals(vista.getContinuar())) {
-                        //Si hem pitjat el boto stop
-                        //continuem la reproducció de l'àudio
-                        hiloControladorBarraProgreso.itsContinuar();
-                    } else if (gestorEsdeveniments.equals(vista.getAnterior())) {
-                        int actual = vistaTablaListado.getSelectedRow();
-                        if (actual != 0) {
-                            hiloControladorBarraProgreso.itsStop();
-                            new CambiarCancionAUTO(actual - 1).start();
-                        } else {
-                            System.out.println("Se ha llegado al inicio");
-                        }
-                    } else if (gestorEsdeveniments.equals(vista.getSiguiente())) {
-
-                        int actual = vistaTablaListado.getSelectedRow();
-                        if (actual != vistaTablaListado.getRowCount() - 1) {
-                            hiloControladorBarraProgreso.itsStop();
-                            new CambiarCancionAUTO(actual + 1).start();
-                        } else {
-                            System.out.println("Se ha llegado al maximo");
-                        }
-
                     }
-                } catch (BasicPlayerException e) {
-                    vistaTablaListado.changeSelection(0, 0, false, true);
-                    vista.getAnterior().setEnabled(false);
-                }
+                    hiloControladorBarraProgreso.itsContinuar();
 
+                } else if (gestorEsdeveniments.equals(vista.getStop())) {
+                    //Si hem pitjat el boto stop
+                    //parem la reproducció de l'àudio
+                    hiloControladorBarraProgreso.itsStop();
+                } else if (gestorEsdeveniments.equals(vista.getPausa())) {
+                    //Si hem pitjat el boto stop
+                    //pausem la reproducció de l'àudio
+                    hiloControladorBarraProgreso.itsPause();
+                } else if (gestorEsdeveniments.equals(vista.getReproducir())) {
+                    int cubWidth = 30;
+                    Image img, newimg;
+                    String direccion;
+                    if (MODO_REPRODUCIR.equals(Modo_reproducir.BUCLE)) {
+                        MODO_REPRODUCIR = Modo_reproducir.SHUFFLE;
+                        direccion = "icono\\barajar.png";
+                    } else {
+                        MODO_REPRODUCIR = Modo_reproducir.BUCLE;
+                        direccion = "icono\\reproducir.png";
+                    }
+                    try {
+                        img = ImageIO.read(new File(direccion));
+                        newimg = img.getScaledInstance(cubWidth, cubWidth, java.awt.Image.SCALE_SMOOTH);
+                        vista.getReproducir().setIcon(new ImageIcon(newimg));
+                    } catch (IOException ex) {
+                        Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                } else if (gestorEsdeveniments.equals(vista.getAnterior())) {
+                    int actual = vistaTablaListado.getSelectedRow();
+                    if (actual != 0) {
+                        hiloControladorBarraProgreso.itsStop();
+                        new CambiarCancionAUTO(actual - 1).start();
+                    } else {
+                        System.out.println("Se ha llegado al inicio");
+                    }
+                } else if (gestorEsdeveniments.equals(vista.getSiguiente())) {
+
+                    int actual = vistaTablaListado.getSelectedRow();
+                    if (actual != vistaTablaListado.getRowCount() - 1) {
+                        hiloControladorBarraProgreso.itsStop();
+                        new CambiarCancionAUTO(actual + 1).start();
+                    } else {
+                        System.out.println("Se ha llegado al maximo");
+                    }
+
+                }
+            } catch (BasicPlayerException e) {
+                vistaTablaListado.changeSelection(0, 0, false, true);
+                vista.getAnterior().setEnabled(false);
             }
+
         }
     }
+}

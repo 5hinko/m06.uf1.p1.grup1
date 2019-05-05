@@ -78,7 +78,7 @@ public class BarraProgreso extends Thread {
                     } catch (BasicPlayerException ex) {
                         Logger.getLogger(BarraProgreso.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    System.out.println("Hilo Terminado");
+                    System.out.println("Hilo Canción Terminado");
                     //threadSiguiente.start();
                     ExecutorService executor = Executors.newCachedThreadPool();
                     executor.execute(threadSiguiente);

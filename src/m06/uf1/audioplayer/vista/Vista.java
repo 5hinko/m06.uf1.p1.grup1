@@ -45,7 +45,7 @@ public class Vista {
     private JButton play;
     private JButton stop;
     private JButton pausa;
-    private JButton continuar;
+    private JButton reproducir;
     private JButton anterior;
     private JButton siguiente;
 
@@ -174,15 +174,14 @@ public class Vista {
         menuControl = new JPanel();
         menuControl.setLayout(new GridLayout(0, 6));
         menuControl.setBorder(BorderFactory.createEmptyBorder(10, 5, 0, 5));
-        Image img;
-        Image newimg;
+        Image img, newimg;
         try {
-            cubWidth = 20;
+            cubWidth = 40;
             img = ImageIO.read(new File("icono\\boton-de-reproduccion.png"));
             newimg = img.getScaledInstance(cubWidth, cubWidth, java.awt.Image.SCALE_SMOOTH);
             play = new JButton(new ImageIcon(newimg));
 
-            cubWidth = 17;
+            cubWidth = 30;
             img = ImageIO.read(new File("icono\\detener.png"));
             newimg = img.getScaledInstance(cubWidth, cubWidth, java.awt.Image.SCALE_SMOOTH);
             stop = new JButton(new ImageIcon(newimg));
@@ -191,11 +190,7 @@ public class Vista {
             newimg = img.getScaledInstance(cubWidth, cubWidth, java.awt.Image.SCALE_SMOOTH);
             pausa = new JButton(new ImageIcon(newimg));
 
-            img = ImageIO.read(new File("icono\\boton-de-reproduccion.png"));
-            newimg = img.getScaledInstance(cubWidth, cubWidth, java.awt.Image.SCALE_SMOOTH);
-            continuar = new JButton(new ImageIcon(newimg));
-            continuar = new JButton("Continue");
-
+            cubWidth = 20;
             img = ImageIO.read(new File("icono\\espalda.png"));
             newimg = img.getScaledInstance(cubWidth, cubWidth, java.awt.Image.SCALE_SMOOTH);
             anterior = new JButton(new ImageIcon(newimg));
@@ -203,22 +198,20 @@ public class Vista {
             img = ImageIO.read(new File("icono\\proximo.png"));
             newimg = img.getScaledInstance(cubWidth, cubWidth, java.awt.Image.SCALE_SMOOTH);
             siguiente = new JButton(new ImageIcon(newimg));
+
+            cubWidth = 30;
+            img = ImageIO.read(new File("icono\\reproducir.png"));
+            newimg = img.getScaledInstance(cubWidth, cubWidth, java.awt.Image.SCALE_SMOOTH);
+            reproducir = new JButton(new ImageIcon(newimg));
         } catch (IOException ex) {
             Logger.getLogger(Vista.class.getName()).log(Level.SEVERE, null, ex);
         }
-        /*
-        play = new JButton("Play");
-        stop = new JButton("Stop");
-        pausa = new JButton("Pause");
-        continuar = new JButton("Continue");
-        anterior = new JButton("Anterior");
-        siguiente = new JButton("Siguiente");*/
         menuControl.add(anterior);
+        menuControl.add(stop);
         menuControl.add(play);
         menuControl.add(pausa);
-        menuControl.add(continuar);
-        menuControl.add(stop);
         menuControl.add(siguiente);
+        menuControl.add(reproducir);
         //anterior.setEnabled(false);
 
         columnaMusica.add(menuControl, BorderLayout.SOUTH);
@@ -288,12 +281,12 @@ public class Vista {
         this.pausa = pausa;
     }
 
-    public JButton getContinuar() {
-        return continuar;
+    public JButton getReproducir() {
+        return reproducir;
     }
 
-    public void setContinuar(JButton continuar) {
-        this.continuar = continuar;
+    public void setReproducir(JButton reproducir) {
+        this.reproducir = reproducir;
     }
 
     public JComboBox getjBoxAlbum() {
