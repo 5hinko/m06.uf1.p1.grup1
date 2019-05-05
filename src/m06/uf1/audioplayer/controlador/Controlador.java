@@ -147,6 +147,9 @@ public class Controlador {
         }
         );
 
+        vistaBarraProgreso.addAdjustmentListener((e) -> {
+            hiloControladorBarraProgreso.setBarraProgreso(e.getValue());
+        });
     }
 
     private void introducirDatosLista(ListaReproduccion args) {
@@ -253,7 +256,9 @@ public class Controlador {
         @Override
         public void run() {
 
-            if(filaMusica == -100) filaMusica = (vistaTablaListado.getSelectedRow() + 1);
+            if (filaMusica == -100) {
+                filaMusica = (vistaTablaListado.getSelectedRow() + 1);
+            }
             if (filaMusica < vistaTablaListado.getRowCount()) {//!cancionProgrmar.isEmpty()) {
 
                 selecionarCancion(filaMusica);//vistaTablaListado.getValueAt(filaMusica + 1, 2).toString());
@@ -263,7 +268,7 @@ public class Controlador {
                 } catch (BasicPlayerException ex) {
                     Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }else{
+            } else {
                 System.out.println("Lista Terminada");
             }
         }

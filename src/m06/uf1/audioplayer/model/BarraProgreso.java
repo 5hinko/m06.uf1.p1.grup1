@@ -48,7 +48,7 @@ public class BarraProgreso extends Thread {
             }
             //Start
             while (start) {
-                int progresoNum =  barraProgreso.getValue();
+                int progresoNum = barraProgreso.getValue();
                 int limitProgreso = barraProgreso.getMaximum();
                 for (numBucleProgress = progresoNum; numBucleProgress <= limitProgreso && !stop; numBucleProgress++) {
 
@@ -111,12 +111,6 @@ public class BarraProgreso extends Thread {
     }
 
     public void itsPlay() throws BasicPlayerException {
-        itsStop();
-        try {
-            Thread.sleep(5);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(BarraProgreso.class.getName()).log(Level.SEVERE, null, ex);
-        }
         todosMismoVariable(false);
         controlladorGUI(0);
         start = true;
@@ -145,6 +139,10 @@ public class BarraProgreso extends Thread {
             barraProgreso.notify();
         }
         audioMusica.getPlayer().resume();
+    }
+
+    public void setBarraProgreso(int num) {
+        numBucleProgress = num;
     }
 
     public Audio getAudioMusica() {

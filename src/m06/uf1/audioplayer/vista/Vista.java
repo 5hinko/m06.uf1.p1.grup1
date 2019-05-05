@@ -7,8 +7,14 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Toolkit;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import m06.uf1.audioplayer.model.ModelTaula;
@@ -109,10 +115,10 @@ public class Vista {
         textoAlbumTitulo = new JLabel("Totes les cançons");
         textoTitulo = new JLabel("Títul Cançó");
         imagenLabel = new JLabel();
-        int width = 200, height = 200;
-        imagenLabel.setMinimumSize(new Dimension(width, height));
-        imagenLabel.setMaximumSize(new Dimension(width, height));
-        imagenLabel.setPreferredSize(new Dimension(width, height));
+        int cubWidth = 200;
+        imagenLabel.setMinimumSize(new Dimension(cubWidth, cubWidth));
+        imagenLabel.setMaximumSize(new Dimension(cubWidth, cubWidth));
+        imagenLabel.setPreferredSize(new Dimension(cubWidth, cubWidth));
         imagenLabel.setBackground(Color.red);
         imagenLabel.setBorder(BorderFactory.createTitledBorder(""));
         imagenLabel.setIcon(new ImageIcon("covers\\ShinyBG.png"));
@@ -162,19 +168,51 @@ public class Vista {
         menuControl2.add(panelExpress, BorderLayout.EAST);
         menuControl.add(menuControl2, BorderLayout.SOUTH);
 
-
         columnaMusica.add(menuControl, BorderLayout.CENTER);
 
         //Abajo Control Layout
         menuControl = new JPanel();
         menuControl.setLayout(new GridLayout(0, 6));
         menuControl.setBorder(BorderFactory.createEmptyBorder(10, 5, 0, 5));
+        Image img;
+        Image newimg;
+        try {
+            cubWidth = 20;
+            img = ImageIO.read(new File("icono\\boton-de-reproduccion.png"));
+            newimg = img.getScaledInstance(cubWidth, cubWidth, java.awt.Image.SCALE_SMOOTH);
+            play = new JButton(new ImageIcon(newimg));
+
+            cubWidth = 17;
+            img = ImageIO.read(new File("icono\\detener.png"));
+            newimg = img.getScaledInstance(cubWidth, cubWidth, java.awt.Image.SCALE_SMOOTH);
+            stop = new JButton(new ImageIcon(newimg));
+
+            img = ImageIO.read(new File("icono\\pausa.png"));
+            newimg = img.getScaledInstance(cubWidth, cubWidth, java.awt.Image.SCALE_SMOOTH);
+            pausa = new JButton(new ImageIcon(newimg));
+
+            img = ImageIO.read(new File("icono\\boton-de-reproduccion.png"));
+            newimg = img.getScaledInstance(cubWidth, cubWidth, java.awt.Image.SCALE_SMOOTH);
+            continuar = new JButton(new ImageIcon(newimg));
+            continuar = new JButton("Continue");
+
+            img = ImageIO.read(new File("icono\\espalda.png"));
+            newimg = img.getScaledInstance(cubWidth, cubWidth, java.awt.Image.SCALE_SMOOTH);
+            anterior = new JButton(new ImageIcon(newimg));
+
+            img = ImageIO.read(new File("icono\\proximo.png"));
+            newimg = img.getScaledInstance(cubWidth, cubWidth, java.awt.Image.SCALE_SMOOTH);
+            siguiente = new JButton(new ImageIcon(newimg));
+        } catch (IOException ex) {
+            Logger.getLogger(Vista.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        /*
         play = new JButton("Play");
         stop = new JButton("Stop");
         pausa = new JButton("Pause");
         continuar = new JButton("Continue");
         anterior = new JButton("Anterior");
-        siguiente = new JButton("Siguiente");
+        siguiente = new JButton("Siguiente");*/
         menuControl.add(anterior);
         menuControl.add(play);
         menuControl.add(pausa);
@@ -300,10 +338,10 @@ public class Vista {
 
     public JButton getAnterior() {
         return anterior;
-}
+    }
 
     public JButton getSiguiente() {
         return siguiente;
     }
-    
+
 }
