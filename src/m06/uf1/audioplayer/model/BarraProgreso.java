@@ -29,11 +29,10 @@ public class BarraProgreso extends Thread {
     private boolean pause;
     private boolean stop;
 
-    public BarraProgreso(Object barra, Object progreso, Thread threadSiguiente) {
+    public BarraProgreso(Object barra, Object progreso) {
         this.barraProgreso = (JScrollBar) barra;
         this.textoProgreso = (JLabel) progreso;
         todosMismoVariable(false);
-        this.threadSiguiente = threadSiguiente;
     }
 
     @Override
@@ -82,11 +81,16 @@ public class BarraProgreso extends Thread {
                     System.out.println("Hilo Terminado");
                     //threadSiguiente.start();
                     ExecutorService executor = Executors.newCachedThreadPool();
-                    executor.submit(threadSiguiente);
+                    executor.execute(threadSiguiente);
                 }
             }
             //reset
         } while (1 == 1);
+    }
+
+    public void setThreadSiguiente(Thread threadSiguiente) {
+
+        this.threadSiguiente = threadSiguiente;
     }
 
     private void controlladorGUI(int progresoNum) {
