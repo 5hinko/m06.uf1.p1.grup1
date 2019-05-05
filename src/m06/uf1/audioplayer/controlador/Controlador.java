@@ -146,10 +146,10 @@ public class Controlador {
             }
         }
         );
-
+/*
         vistaBarraProgreso.addAdjustmentListener((e) -> {
-            hiloControladorBarraProgreso.setBarraProgreso(e.getValue());
-        });
+            hiloControladorBarraProgreso.setBarraProgreso(e.getValue()+1);
+        });*/
     }
 
     private void introducirDatosLista(ListaReproduccion args) {
@@ -256,7 +256,7 @@ public class Controlador {
         @Override
         public void run() {
 
-            if (filaMusica == -100) {
+            if (filaMusica < 0) {
                 filaMusica = (vistaTablaListado.getSelectedRow() + 1);
             }
             if (filaMusica < vistaTablaListado.getRowCount()) {//!cancionProgrmar.isEmpty()) {
